@@ -53,15 +53,14 @@ The purpose of our Craigslist App is to help consumers and providers easily buy 
 
 ### 1.3 Definitions, Acronyms and Abbreviations                                                                                                                                                                 | Reference  | Definition                                                                                                                                                                         |
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Java       | A programming language originally developed by James Gosling at Sun Microsystems. We will be using this language to build the backend service for LocalHarvest Hub                 |
+| Java       | A programming language originally developed by James Gosling at Sun Microsystems. We will be using this language to build the backend service for LocalHarvest Hub.                 |
 | Postgresql | Open-source relational database management system.                                                                                                                                 |
-| Webstudio | Will be used to build our web application.                                                                  |
+| Webstudio  | Will be used to build our web application.                                                                                                                                         |
 | API        | Application Programming Interface. This will be used to interface the backend and the fronted of our application.                                                                  |
 | HTML       | Hypertext Markup Language. This is the code that will be used to structure and design the web application and its content.                                                         |
-| CSS        | Cascading Style Sheets. Will be used to add styles and appearance to the web app.                                                                                                  |
-| JavaScript | An object-oriented computer programming language commonly used to create interactive effects within web browsers.Will be used in conjuction with HTML and CSS to make the web app. |
-| VS Code    | An integrated development environment (IDE) for Java. This is where our system will be created.                                                                                    |
-|            |                                                                                                                                                                                    |
+| CSS        | Cascading Style Sheets. Will be used to add styles and appearance to the web app.                                                                                                    |
+| JavaScript | An object-oriented computer programming language commonly used to create interactive effects within web browsers. Will be used in conjuction with HTML and CSS to make the web app. |
+| VS Code    | An integrated development environment (IDE). This is where our system will be created.                                                                                             |
 
 ### 1.4 References
 https://webstudio.is/
