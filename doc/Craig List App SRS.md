@@ -51,7 +51,9 @@ Developer-oriented requirements describe the system from a software developer’
 ### 1.2 Product Scope
 The purpose of our Craigslist App is to help consumers and providers easily buy and sell products and services. This web-based application simplifies subscription management and makes it easier to manage products, ensuring a straightforward experience for everyone.
 
-### 1.3 Definitions, Acronyms and Abbreviations                                                                                                                                                                 | Reference  | Definition                                                                                                                                                                         |
+### 1.3 Definitions, Acronyms and Abbreviations
+
+| Reference  | Definition                                                                                                                                                                         |
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Java       | A programming language originally developed by James Gosling at Sun Microsystems. We will be using this language to build the backend service for LocalHarvest Hub.                 |
 | Postgresql | Open-source relational database management system.                                                                                                                                 |
