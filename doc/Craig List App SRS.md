@@ -35,11 +35,11 @@ Table of Contents
     * 3.2.7 [Deadline](#327-deadline)
 
 ## Revision History
-|    Name   |  Date |       Reason For Changes    | Version   |
-| --------- | ----- | --------------------------- | --------- |
-|Olme Matias|  9/7  | Added section #1 statements |  1.0      |
-|           |       |                             |           |
-|           |       |                             |           |
+|    Name   |   Date  |             Reason For Changes              | Version   |
+| --------- | ------- | ------------------------------------------- | --------- |
+|Olme Matias|   9/7   | Added section #1 statements                 |  1.0      |
+|Olme Matias|   9/13  | Added functional requirements for customers |  1.1      |
+|           |         |                                             |           |
 
 ## 1. Introduction
 
@@ -77,8 +77,7 @@ This section should describe the general factors that affect the product and its
 Summarize the major functions the product must perform or must let the user perform. Details will be provided in Section 3, so only a high level summary (such as a bullet list) is needed here. Organize the functions to make them understandable to any reader of the SRS. A picture of the major groups of related requirements and how they relate, such as a top level data flow diagram or object class diagram, is often effective.
 
 ### 2.2 Product Constraints
-This subsection should provide a general description of any other items that will limit the developer’s options. These may include:  
-
+This subsection should provide a general description of any other items that will limit the developer’s options. These may include:
 * Interfaces to users, other applications or hardware.  
 * Quality of service constraints.  
 * Standards compliance.  
