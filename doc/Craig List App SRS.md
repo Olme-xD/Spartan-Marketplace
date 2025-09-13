@@ -35,11 +35,11 @@ Table of Contents
     * 3.2.7 [Deadline](#327-deadline)
 
 ## Revision History
-|    Name   |  Date |     Reason For Changes    | Version   |
-| --------- | ----- | ------------------------- | --------- |
-|Olme Matias|  9/7  | Added consumer statements |  1.0      |
-|           |       |                           |           |
-|           |       |                           |           |
+|    Name   |  Date |       Reason For Changes    | Version   |
+| --------- | ----- | --------------------------- | --------- |
+|Olme Matias|  9/7  | Added section #1 statements |  1.0      |
+|           |       |                             |           |
+|           |       |                             |           |
 
 ## 1. Introduction
 
