@@ -1,10 +1,10 @@
 # Software Requirements Specification
-## For <project name>
+## For <Craig List App>
 
 Version 0.1  
-Prepared by <author>  
-<organization>  
-<date created> 
+Prepared by Olme Matias & Omar Morales  
+CSC340  
+September 7, 2025 
 
 Table of Contents
 =================
@@ -35,28 +35,40 @@ Table of Contents
     * 3.2.7 [Deadline](#327-deadline)
 
 ## Revision History
-| Name | Date    | Reason For Changes  | Version   |
-| ---- | ------- | ------------------- | --------- |
-|      |         |                     |           |
-|      |         |                     |           |
-|      |         |                     |           |
+|    Name   |  Date |     Reason For Changes    | Version   |
+| --------- | ----- | ------------------------- | --------- |
+|Olme Matias|  9/7  | Added consumer statements |  1.0      |
+|           |       |                           |           |
+|           |       |                           |           |
 
 ## 1. Introduction
 
 ### 1.1 Document Purpose
-Describe the purpose of the SRS and its intended audience.
+The purpose of this Software Requirements Document (SRD) is to describe the client-oriented and developer-oriented requirements for the Craig List App website.
+Client-oriented requirements describe the system from the client’s perspective. These requirements include a description of the different types of users served by the system.
+Developer-oriented requirements describe the system from a software developer’s perspective. These requirements include a detailed description of functional, data, performance, and other important requirements.
 
 ### 1.2 Product Scope
-Identify the product whose software requirements are specified in this document, including the revision or release number. Explain what the product that is covered by this SRS will do, particularly if this SRS describes only part of the system or a single subsystem. 
-Provide a short description of the software being specified and its purpose, including relevant benefits, objectives, and goals. Relate the software to corporate goals or business strategies. If a separate vision and scope document is available, refer to it rather than duplicating its contents here.
+The purpose of our Craigslist App is to help consumers and providers easily buy and sell products and services. This web-based application simplifies subscription management and makes it easier to manage products, ensuring a straightforward experience for everyone.
 
-### 1.3 Definitions, Acronyms and Abbreviations                                                                                                                                                                          |
+### 1.3 Definitions, Acronyms and Abbreviations
+
+| Reference  | Definition                                                                                                                                                                         |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Java       | A programming language originally developed by James Gosling at Sun Microsystems. We will be using this language to build the backend service for LocalHarvest Hub.                 |
+| Postgresql | Open-source relational database management system.                                                                                                                                 |
+| Webstudio  | Open-source web builder that will be used to build our web application.                                                                                                                                         |
+| API        | Application Programming Interface. This will be used to interface the backend and the fronted of our application.                                                                  |
+| HTML       | Hypertext Markup Language. This is the code that will be used to structure and design the web application and its content.                                                         |
+| CSS        | Cascading Style Sheets. Will be used to add styles and appearance to the web app.                                                                                                    |
+| JavaScript | An object-oriented computer programming language commonly used to create interactive effects within web browsers. Will be used in conjuction with HTML and CSS to make the web app. |
+| VS Code    | An integrated development environment (IDE). This is where our system will be created.                                                                                             |
 
 ### 1.4 References
-List any other documents or Web addresses to which this SRS refers. These may include user interface style guides, contracts, standards, system requirements specifications, use case documents, or a vision and scope document. Provide enough information so that the reader could access a copy of each reference, including title, author, version number, date, and source or location.
+https://webstudio.is/
 
 ### 1.5 Document Overview
-Describe what the rest of the document contains and how it is organized.
+Section 1 is a general introduction to the document, intended for any readers. Section 2 is focused on the product and its features. This section is for customers and business stakeholders. Section 3 specifies the requirements and constraints for the product and development process. This section is intended for all stakeholders, especially the development team.
 
 ## 2. Product Overview
 This section should describe the general factors that affect the product and its requirements. This section does not state specific requirements. Instead, it provides a background for those requirements, which are defined in detail in Section 3, and makes them easier to understand.
@@ -80,47 +92,63 @@ List any assumed factors (as opposed to known facts) that could affect the requi
 
 ## 3. Requirements
 
-### 3.1 Functional Requirements 
-This section specifies the software product's requirements. Specify all of the software requirements to a level of detail sufficient to enable designers to design a software system to satisfy those requirements, and to enable testers to test that the software system satisfies those requirements.
-
-The specific requirements should:
-* Be uniquely identifiable.
-* State the subject of the requirement (e.g., system, software, etc.) and what shall be done.
-* Optionally state the conditions and constraints, if any.
-* Describe every input (stimulus) into the software system, every output (response) from the software system, and all functions performed by the software system in response to an input or in support of an output.
-* Be verifiable (e.g., the requirement realization can be proven to the customer's satisfaction)
-* Conform to agreed upon syntax, keywords, and terms.
+### 3.1 Functional Requirements  
+* FR0: The system will allow users to create a profile.
+* FR1: The system will allow users to create a new listing for the product or service.
+* FR2: The system will allow users navigate through all the available listing.
+* FR3: The system will allow users to buy the product or service from other users (creator of the listing).
+* FR4: The system will allow users to contact the creator of the listing.
+* FR5: The system will allow users to review the creator of the listing and/or the product.
+* FR6: The system will allow creators of listing rate the customer.
+* FR7: The system will allow creators of listing reply to users reviews.
+* FR8: The system will allow administrators to moderate users, listings and reviews.
+* FR9: The system will allow administrators to view usage statistics.
 
 #### 3.1.1 User interfaces
-Define the software components for which a user interface is needed. Describe the logical characteristics of each interface between the software product and the users. This may include sample screen images, any GUI standards or product family style guides that are to be followed, screen layout constraints, standard buttons and functions (e.g., help) that will appear on every screen, keyboard shortcuts, error message display standards, and so on. Details of the user interface design should be documented in a separate user interface specification.
-
-Could be further divided into Usability and Convenience requirements.
+The user interface will be a standard web application designed to be responsive across various screen sizes. It will use a clean, intuitive layout to minimize the learning curve for new users. Interface components include:
+* Login/Registration Page: A form for creating new accounts and logging in.
+* Dashboard/Profile Page: A page for users to manage their profiles, view their listings, and see their reviews.
+* Listing Creation Page: A form with fields for product/service details, price, description, and images.
+* Search/Browse Page: A searchable list of all available listings with filtering and sorting options.
+* Listing Detail Page: A page displaying all information about a listing, and the creator.
+* Messaging System: A private messaging interface for communication between users.
 
 #### 3.1.2 Hardware interfaces
-Describe the logical and physical characteristics of each interface between the software product and the hardware components of the system. This may include the supported device types, the nature of the data and control interactions between the software and the hardware, and communication protocols to be used.
+The system will operate on any device that has an up-to-date web browser capable of rendering HTML, CSS, and JavaScript.
 
 #### 3.1.3 Software interfaces
+
+
+
+------------
 Describe the connections between this product and other specific software components (name and version), including databases, operating systems, tools, libraries, and integrated commercial components. Identify the data items or messages coming into the system and going out and describe the purpose of each. Describe the services needed and the nature of communications. Refer to documents that describe detailed application programming interface protocols. Identify data that will be shared across software components. If the data sharing mechanism must be implemented in a specific way (for example, use of a global data area in a multitasking operating system), specify this as an implementation constraint.
 
 ### 3.2 Non Functional Requirements 
 
 #### 3.2.1 Performance
+* NFR0: The system will allow the user to create an account in less than 3 minutes.
+* NFR1: The system will allow the user to create a listing in less than 6 minutes.
+
+----------------
 If there are performance requirements for the product under various circumstances, state them here and explain their rationale, to help the developers understand the intent and make suitable design choices. Specify the timing relationships for real time systems. Make such requirements as specific as possible. You may need to state performance requirements for individual functional requirements or features.
 
 #### 3.2.2 Security
+* NFR2: The system will not allow non-registered users see other user's profile information.
+
+--------------
 Specify any requirements regarding security or privacy issues surrounding use of the product or protection of the data used or created by the product. Define any user identity authentication requirements. Refer to any external policies or regulations containing security issues that affect the product. Define any security or privacy certifications that must be satisfied.
 
 #### 3.2.3 Reliability
 Specify the factors required to establish the required reliability of the software system at time of delivery.
 
 #### 3.2.4 Availability
-Specify the factors required to guarantee a defined availability level for the entire system such as checkpoint, recovery, and restart.
+* NFR3: The system will be available 24/7. It will use a reliable hosting provider to handle periods of high traffic.
 
 #### 3.2.5 Compliance
 Specify the requirements derived from existing standards or regulations
 
 #### 3.2.6 Cost
-Specify monetary cost of the software product.
+* NFR4: The total cost for development and initial deployment of the software product is estimated at $50,000. This includes costs for development tools, hosting, and human resources.
 
 #### 3.2.7 Deadline
-Specify schedule for delivery of the software product.
+* NFR5: The software product is scheduled for delivery and deployment on 12/11/2025.
