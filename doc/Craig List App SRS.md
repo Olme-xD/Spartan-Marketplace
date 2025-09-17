@@ -35,11 +35,12 @@ Table of Contents
     * 3.2.7 [Deadline](#327-deadline)
 
 ## Revision History
-|    Name   |  Date |     Reason For Changes    | Version   |
-| --------- | ----- | ------------------------- | --------- |
-|Olme Matias|  9/7  | Added consumer statements |  1.0      |
-|           |       |                           |           |
-|           |       |                           |           |
+|    Name   |   Date  |             Reason For Changes                        | Version   |
+| --------- | ------- | ------------------------------------------------------| --------- |
+|Olme Matias|   9/7   | Added section #1 statements                           |  1.0      |
+|Olme Matias|   9/13  | Added functional requirements for customers           |  1.1      |
+|Omar Morales|  9/17  | Added section #2 statements                           |  1.2      |
+|Omar Morales|  9/17  | Added non-functional reqs and provider functional reqs|  1.3      |
 
 ## 1. Introduction
 
@@ -57,7 +58,7 @@ The purpose of our Craigslist App is to help consumers and providers easily buy 
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Java       | A programming language originally developed by James Gosling at Sun Microsystems. We will be using this language to build the backend service for LocalHarvest Hub.                 |
 | Postgresql | Open-source relational database management system.                                                                                                                                 |
-| Webstudio  | Will be used to build our web application.                                                                                                                                         |
+| Webstudio  | Open-source web builder that will be used to build our web application.                                                                                                                                         |
 | API        | Application Programming Interface. This will be used to interface the backend and the fronted of our application.                                                                  |
 | HTML       | Hypertext Markup Language. This is the code that will be used to structure and design the web application and its content.                                                         |
 | CSS        | Cascading Style Sheets. Will be used to add styles and appearance to the web app.                                                                                                    |
@@ -71,68 +72,73 @@ https://webstudio.is/
 Section 1 is a general introduction to the document, intended for any readers. Section 2 is focused on the product and its features. This section is for customers and business stakeholders. Section 3 specifies the requirements and constraints for the product and development process. This section is intended for all stakeholders, especially the development team.
 
 ## 2. Product Overview
-This section should describe the general factors that affect the product and its requirements. This section does not state specific requirements. Instead, it provides a background for those requirements, which are defined in detail in Section 3, and makes them easier to understand.
+The Craig List app is a web-based platform designed to let customers buy or sell products and services in an easy and efficient way. Customers can browse listings, purchase services or goods, leave reviews. Providers can post and manage their listings, view engagement statistics, and respond to feedback. Administrators manage platform moderation and overall usage statistics. The app nensures a straightforward, community-driven marketplace that minimizes waste by allowing users to resell subscriptions or items they no longer need.
 
 ### 2.1 Product Functions
-Summarize the major functions the product must perform or must let the user perform. Details will be provided in Section 3, so only a high level summary (such as a bullet list) is needed here. Organize the functions to make them understandable to any reader of the SRS. A picture of the major groups of related requirements and how they relate, such as a top level data flow diagram or object class diagram, is often effective.
+The Craig List App supports three primary roles:
+- Customers: Create and manage profiles, browse listings, contact providers, purchase item/services, and write reviews.
+- Provider: Create, edit and remove listings, track customer engagement and respond to customer reviews.
+- Administrator: Moderate users, services and reviews, and view usage statistics such as views, logins.
 
 ### 2.2 Product Constraints
-This subsection should provide a general description of any other items that will limit the developer’s options. These may include:  
-
-* Interfaces to users, other applications or hardware.  
-* Quality of service constraints.  
-* Standards compliance.  
-* Constraints around design or implementation.
+The program will only run on devices with a modern web browser that supports HTML, CSS, and JavaScript. Development is expected to be completed at zero cost, limiting tool and hosting options. The deadline for deployment is December 11, 2025, which may restrict features. The system also depends on Webstudio for frontend development and PostgreSQL for database management, which may affect scalability.
   
 ### 2.3 User Characteristics
-Identify the various user classes that you anticipate will use this product. User classes may be differentiated based on frequency of use, subset of product functions used, technical expertise, security or privilege levels, educational level, or experience. Describe the pertinent characteristics of each user class. Certain requirements may pertain only to certain user classes. Distinguish the most important user classes for this product from those who are less important to satisfy.
+The application is designed for users with little technical experience beyond browsing the web. Customers should be able to use the system effectively after a few sessions. Providers may have slightly more technical knowledge, as they manage multiple listings and track engagement. Administrators require higher expertise to handle moderation and system management.
 
 ### 2.4 Assumptions and Dependencies
-List any assumed factors (as opposed to known facts) that could affect the requirements stated in the SRS. These could include third-party or commercial components that you plan to use, issues around the development or operating environment, or constraints. The project could be affected if these assumptions are incorrect, are not shared, or change. Also identify any dependencies the project has on external factors, such as software components that you intend to reuse from another project, unless they are already documented elsewhere (for example, in the vision and scope document or the project plan).
+The system assumes users have reliable internet access and that hosting services remain available. It depends on Webstudio for building the frontend, PostgreSQL for data storage, and APIs for authentication, messaging, and payments. The system also assumes that payment gateways and third-party APIs remain reliable and secure throughout development and operation.
 
 ## 3. Requirements
 
-### 3.1 Functional Requirements 
-This section specifies the software product's requirements. Specify all of the software requirements to a level of detail sufficient to enable designers to design a software system to satisfy those requirements, and to enable testers to test that the software system satisfies those requirements.
-
-The specific requirements should:
-* Be uniquely identifiable.
-* State the subject of the requirement (e.g., system, software, etc.) and what shall be done.
-* Optionally state the conditions and constraints, if any.
-* Describe every input (stimulus) into the software system, every output (response) from the software system, and all functions performed by the software system in response to an input or in support of an output.
-* Be verifiable (e.g., the requirement realization can be proven to the customer's satisfaction)
-* Conform to agreed upon syntax, keywords, and terms.
+### 3.1 Functional Requirements  
+* FR0: The system shall allow users to create a profile.
+* FR1: The system shall allow users to create a new listing for the product or service.
+* FR2: The system shall allow users navigate through all the available listing.
+* FR3: The system shall allow users to buy the product or service from other users (creator of the listing).
+* FR4: The system shall allow users to contact the creator of the listing.
+* FR5: The system shall allow users to review the creator of the listing and/or the product.
+* FR6: The system shall allow creators of listing rate the customer.
+* FR7: The system shall allow creators of listing reply to users reviews.
+* FR8: The system shall allow administrators to moderate users, listings and reviews.
+* FR9: The system shall allow administrators to view usage statistics.
 
 #### 3.1.1 User interfaces
-Define the software components for which a user interface is needed. Describe the logical characteristics of each interface between the software product and the users. This may include sample screen images, any GUI standards or product family style guides that are to be followed, screen layout constraints, standard buttons and functions (e.g., help) that will appear on every screen, keyboard shortcuts, error message display standards, and so on. Details of the user interface design should be documented in a separate user interface specification.
-
-Could be further divided into Usability and Convenience requirements.
+The user interface will be a standard web application designed to be responsive across various screen sizes. It will use a clean, intuitive layout to minimize the learning curve for new users. Interface components include:
+* Login/Registration Page: A form for creating new accounts and logging in.
+* Dashboard/Profile Page: A page for users to manage their profiles, view their listings, and see their reviews.
+* Listing Creation Page: A form with fields for product/service details, price, description, and images.
+* Search/Browse Page: A searchable list of all available listings with filtering and sorting options.
+* Listing Detail Page: A page displaying all information about a listing, and the creator.
+* Messaging System: A private messaging interface for communication between users.
 
 #### 3.1.2 Hardware interfaces
-Describe the logical and physical characteristics of each interface between the software product and the hardware components of the system. This may include the supported device types, the nature of the data and control interactions between the software and the hardware, and communication protocols to be used.
+The system will operate on any device that has an up-to-date web browser capable of rendering HTML, CSS, and JavaScript.
 
 #### 3.1.3 Software interfaces
-Describe the connections between this product and other specific software components (name and version), including databases, operating systems, tools, libraries, and integrated commercial components. Identify the data items or messages coming into the system and going out and describe the purpose of each. Describe the services needed and the nature of communications. Refer to documents that describe detailed application programming interface protocols. Identify data that will be shared across software components. If the data sharing mechanism must be implemented in a specific way (for example, use of a global data area in a multitasking operating system), specify this as an implementation constraint.
+* Java JDK 21 will be used as the development platform to build the backend service. It provides the runtime environment necessary to execute the application.
+* PostgreSQL 17 will serve as the relational database management system, responsible for storing user profiles, listings, transactions, and reviews.
+* SpringBoot 3.4.5 will be used as the backend framework to manage server-side logic, handle HTTP requests, and connect with the database.
+* Webstudio will be used for frontend development to ensure a responsive and user-friendly interface.
 
 ### 3.2 Non Functional Requirements 
 
 #### 3.2.1 Performance
-If there are performance requirements for the product under various circumstances, state them here and explain their rationale, to help the developers understand the intent and make suitable design choices. Specify the timing relationships for real time systems. Make such requirements as specific as possible. You may need to state performance requirements for individual functional requirements or features.
+* NFR0: The system shall allow the user to create an account in less than 3 minutes.
+* NFR1: The system shall allow the user to create a listing in less than 6 minutes.
 
 #### 3.2.2 Security
-Specify any requirements regarding security or privacy issues surrounding use of the product or protection of the data used or created by the product. Define any user identity authentication requirements. Refer to any external policies or regulations containing security issues that affect the product. Define any security or privacy certifications that must be satisfied.
+* NFR2: The system shall not allow non-registered users see other user's profile information.
 
 #### 3.2.3 Reliability
-Specify the factors required to establish the required reliability of the software system at time of delivery.
 
 #### 3.2.4 Availability
-Specify the factors required to guarantee a defined availability level for the entire system such as checkpoint, recovery, and restart.
+* NFR3: The system will be available 24/7. It will use a reliable hosting provider to handle periods of high traffic.
 
 #### 3.2.5 Compliance
-Specify the requirements derived from existing standards or regulations
 
 #### 3.2.6 Cost
-Specify monetary cost of the software product.
+* NFR4: We expect to spend zero dollars on this project.
 
 #### 3.2.7 Deadline
-Specify schedule for delivery of the software product.
+* NFR5: The software product is scheduled for delivery and deployment on 12/11/2025.
