@@ -35,11 +35,12 @@ Table of Contents
     * 3.2.7 [Deadline](#327-deadline)
 
 ## Revision History
-|    Name   |   Date  |             Reason For Changes              | Version   |
-| --------- | ------- | ------------------------------------------- | --------- |
-|Olme Matias|   9/7   | Added section #1 statements                 |  1.0      |
-|Olme Matias|   9/13  | Added functional requirements for customers |  1.1      |
-|Omar Morales|  9/17  | Added section #2 statements                 |           |
+|    Name   |   Date  |             Reason For Changes                        | Version   |
+| --------- | ------- | ------------------------------------------------------| --------- |
+|Olme Matias|   9/7   | Added section #1 statements                           |  1.0      |
+|Olme Matias|   9/13  | Added functional requirements for customers           |  1.1      |
+|Omar Morales|  9/17  | Added section #2 statements                           |  1.2      |
+|Omar Morales|  9/17  | Added non-functional reqs and provider functional reqs|  1.3      |
 
 ## 1. Introduction
 
