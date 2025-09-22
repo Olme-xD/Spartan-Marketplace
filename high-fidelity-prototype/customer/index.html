@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- HEAD of HTML -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,8 +21,9 @@
 <!-- NOTE: Make the user profile CSS customizable (eg. Dark, Light, Rainbow Moving, Disco, etc) -->
 
 <!-- BODY of HTML -->
+
 <body class="bg-light text-light">
-    
+
     <!-- Navegation Bar -->
     <div class="sticky-top container-fluid bg-dark text-light">
         <header class="d-flex justify-content-between align-items-center py-1">
@@ -31,11 +33,18 @@
             </a>
             <!-- Search Bar -->
             <form class="col-md-4 d-flex" role="search">
-                <input class="form-control rounded-pill me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+                <input class="form-control rounded-pill me-2" type="search" placeholder="Search" aria-label="Search"
+                    id="searchInput">
                 <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
             </form>
+            <!-- User Profile Icon -->
+            <nav class="d-flex align-items-center" id="userProfileNav">
+                <a href="dashboard.html" class="text-light text-decoration-none me-3">
+                    <i class="bi bi-person-circle" style="font-size: 30px;"></i>
+                </a>
+            </nav>
             <!-- Navigation Links -->
-            <nav class="space-x-10">
+            <nav class="space-x-10" id="navLinks">
                 <a href="login.html" class="btn btn-primary rounded-pill">Login</a>
                 <a href="register.html" class="btn btn-secondary rounded-pill">Register</a>
             </nav>
@@ -49,7 +58,8 @@
             <div class="bg-secondary text-light col-md-2 p-3">
                 <!-- Search Bar in Sidebar -->
                 <form class="search-bar text-light p-3">
-                    <input class="form-control" type="search" placeholder="Search Categories" aria-label="Search Categories" id="searchInputCategories">
+                    <input class="form-control" type="search" placeholder="Search Categories"
+                        aria-label="Search Categories" id="searchInputCategories">
                 </form>
                 <!-- Location and Categories -->
                 <h2 class="">Location</h2>
@@ -79,6 +89,53 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Simulated User Authentication State
+        let isLoggedIn = true;
+        const userProfileNav = document.getElementById('userProfileNav');
+        const navLinks = document.getElementById('navLinks');
+        if (isLoggedIn) {
+            navLinks.style.display = 'none';
+            userProfileNav.style.display = 'flex';
+            userProfileNav.innerHTML = '';
+
+            const profileIconLink = document.createElement('a');
+            profileIconLink.href = 'dashboard.html';
+            profileIconLink.className = 'text-light text-decoration-none me-3';
+            const profileIcon = document.createElement('i');
+            profileIcon.className = 'bi bi-person-circle';
+            profileIcon.style.fontSize = '30px';
+            profileIconLink.appendChild(profileIcon);
+
+            const profileLink = document.createElement('a');
+            profileLink.href = 'dashboard.html';
+            profileLink.className = 'text-light text-decoration-none me-3';
+            profileLink.textContent = 'Profile';
+
+            const messagesLink = document.createElement('a');
+            messagesLink.href = 'dashboard.html';
+            messagesLink.className = 'text-light text-decoration-none me-3';
+            messagesLink.textContent = 'Messages';
+
+            const notificationsLink = document.createElement('a');
+            notificationsLink.href = 'dashboard.html';
+            notificationsLink.className = 'text-light text-decoration-none me-3';
+            notificationsLink.textContent = 'Notifications';
+
+            const logoutBtn = document.createElement('a');
+            logoutBtn.href = 'index.html';
+            logoutBtn.className = 'btn btn-outline-light rounded-pill';
+            logoutBtn.textContent = 'Logout';
+
+            userProfileNav.appendChild(profileIconLink);
+            userProfileNav.appendChild(profileLink);
+            userProfileNav.appendChild(messagesLink);
+            userProfileNav.appendChild(notificationsLink);
+            userProfileNav.appendChild(logoutBtn);
+        } else {
+            userProfileNav.style.display = 'none';
+            navLinks.style.display = 'flex';
+        }
+
         // Hard Coded Data for Categories
         const categoryData = [
             { name: "Electronics", link: "images/img_test.ico", iconClass: "bi-phone" },
@@ -97,7 +154,7 @@
         categoryData.forEach(category => {
             const li = document.createElement('li');
             li.className = 'text-capitalize rounded mb-2 p-2';
-    
+
             const a = document.createElement('a');
             a.href = category.link;
             a.className = 'text-light text-decoration-none d-flex align-items-center';
@@ -117,7 +174,7 @@
 
         // Search Functionality
         const searchInput = document.getElementById('searchInputCategories');
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const filter = searchInput.value.toLowerCase();
             const listItems = categoryList.getElementsByTagName('li');
             Array.from(listItems).forEach(item => {
@@ -128,45 +185,53 @@
 
         // Hard Coded Data for Cards
         const cardsData = [{
+            id: 1,
             title: "iPhone 17 for Sale",
             description: "Used iPhone 12 in excellent condition. Comes with charger.",
             price: "FREE",
-            imageUrl: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-black_GEO_US?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxa3pYQjBteGp2cFFHL09TNGhVUUhxeHFkSUJZcmNjVXZ4cDk3YTVMcWk4SHF2TWlpSzUzejRCZGt2SjJUNGl1VEE4bm1RcmlWRWp2eDN1WHNkSjNmUmJRdGRDSXo3RG9GTXJVdDhBcERxMEQ&traceId=1"
-        },{
+            images: ["https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-black_GEO_US?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxa3pYQjBteGp2cFFHL09TNGhVUUhxeHFkSUJZcmNjVXZ4cDk3YTVMcWk4SHF2TWlpSzUzejRCZGt2SjJUNGl1VEE4bm1RcmlWRWp2eDN1WHNkSjNmUmJRdGRDSXo3RG9GTXJVdDhBcERxMEQ&traceId=1"]
+        }, {
+            id: 2,
             title: "Sofa Set - Like New",
             description: "Comfortable 3-piece sofa set, barely used.",
             price: "$300",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff1ffd1b0-78ab-4dc8-93db-2d83a972d86d_2.233e2d7c15408603e9f54bfa58aad1c3.jpeg&f=1&nofb=1&ipt=3d879ac51d08db2ff6b0e14179127c906f56dd3633d311096dc4f940980bad37"
-        },{
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff1ffd1b0-78ab-4dc8-93db-2d83a972d86d_2.233e2d7c15408603e9f54bfa58aad1c3.jpeg&f=1&nofb=1&ipt=3d879ac51d08db2ff6b0e14179127c906f56dd3633d311096dc4f940980bad37"]
+        }, {
+            id: 3,
             title: "Mountain Bike",
             description: "A sturdy mountain bike suitable for all terrains. Recently serviced.",
             price: "$450",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.singletracks.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F09%2FIMG_1720.jpg&f=1&nofb=1&ipt=bb7c589b802ce321db4adc993ee1acf8adde0566e9c853f2e433fa5ee2e64009"
-        },{
+            images: ["https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.singletracks.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F09%2FIMG_1720.jpg&f=1&nofb=1&ipt=bb7c589b802ce321db4adc993ee1acf8adde0566e9c853f2e433fa5ee2e64009"]
+        }, {
+            id: 4,
             title: "Gaming Laptop",
             description: "High-performance gaming laptop with the latest specs.",
             price: "$1200",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobots.net%2Fwp-content%2Fuploads%2F2023%2F12%2Fwhat-is-a-gaming-laptop-1701754858.jpg&f=1&nofb=1&ipt=bf612b3e6a479450a016a808ad548853bdfe89accbd6aa294c12e2e93f9f5af2"
-        },{
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobots.net%2Fwp-content%2Fuploads%2F2023%2F12%2Fwhat-is-a-gaming-laptop-1701754858.jpg&f=1&nofb=1&ipt=bf612b3e6a479450a016a808ad548853bdfe89accbd6aa294c12e2e93f9f5af2"]
+        }, {
+            id: 5,
             title: "Dining Table Set",
             description: "Elegant dining table set with 6 chairs.",
             price: "$800",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fouchcart.com%2Fcdn%2Fshop%2Fproducts%2FNadine_6_-_Person_Counter_Height_Dining_Set.jpg%3Fv%3D1637225879%26width%3D800&f=1&nofb=1&ipt=fa91f4aad01a61707c0a6cde405c1b1fc76275c53e37f7718f0e5228f5070bb3"
-        },{
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fouchcart.com%2Fcdn%2Fshop%2Fproducts%2FNadine_6_-_Person_Counter_Height_Dining_Set.jpg%3Fv%3D1637225879%26width%3D800&f=1&nofb=1&ipt=fa91f4aad01a61707c0a6cde405c1b1fc76275c53e37f7718f0e5228f5070bb3"]
+        }, {
+            id: 6,
             title: "Smart TV 55\"",
             description: "55-inch Smart TV with 4K resolution and HDR support. Like new.",
             price: "$700",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.power-cdn.net%2Fimages%2Fh-890a46a61ea24670b1b7e9fbd7645215%2Ffeelingimages%2F1988936%2F1988936_2_1200px_w_g.jpg&f=1&nofb=1&ipt=b16fb66505b427612e4a3f1090bc4fb78b2c0d33d03494be1fe989a9f434b473"
-        },{
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.power-cdn.net%2Fimages%2Fh-890a46a61ea24670b1b7e9fbd7645215%2Ffeelingimages%2F1988936%2F1988936_2_1200px_w_g.jpg&f=1&nofb=1&ipt=b16fb66505b427612e4a3f1090bc4fb78b2c0d33d03494be1fe989a9f434b473"]
+        }, {
+            id: 7,
             title: "Leather Jacket",
             description: "Genuine leather jacket, size M. Stylish and warm for winter.",
             price: "$150",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2F1rgAAOSwWcdlvBNs%2Fs-l400.jpg&f=1&nofb=1&ipt=a19a7fac0fb988672f88ef3067c3e84fe41498ddb984b4a06a2c998d9c4e57e0"
-        },{
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2F1rgAAOSwWcdlvBNs%2Fs-l400.jpg&f=1&nofb=1&ipt=a19a7fac0fb988672f88ef3067c3e84fe41498ddb984b4a06a2c998d9c4e57e0"]
+        }, {
+            id: 8,
             title: "Electric Guitar",
             description: "Fender electric guitar in great condition.",
             price: "$400",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F6c%2F94%2F58%2F6c9458a02f78830c8338fc7fffd56b9c.jpg&f=1&nofb=1&ipt=cf3b4240d765e7b612e815ea75664ad96f5088e532977eeafd7002b90b14babe"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F6c%2F94%2F58%2F6c9458a02f78830c8338fc7fffd56b9c.jpg&f=1&nofb=1&ipt=cf3b4240d765e7b612e815ea75664ad96f5088e532977eeafd7002b90b14babe"]
         }];
 
         // Load Cards into the Main Content Area
@@ -177,9 +242,10 @@
 
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card h-100 shadow-sm';
+            cardDiv.setAttribute('data-id', card.id);
 
             const img = document.createElement('img');
-            img.src = card.imageUrl;
+            img.src = card.images[0];
             img.className = 'card-img-top';
             img.style.height = '200px';
             img.style.objectFit = 'cover';
@@ -213,19 +279,19 @@
         });
 
         // Click Event to Navigate to Detailed View
-        cardsContainer.addEventListener('click', function(event) {
+        cardsContainer.addEventListener('click', function (event) {
             const card = event.target.closest('.card');
             if (card) {
-                const cardLink = card.querySelector('img');
-                if (cardLink) {
-                    const href = cardLink.src;
-                    window.location.href = href;
+                const cardId = card.getAttribute('data-id');
+                if (cardId) {
+                    window.location.href = `listing_view.html?id=${cardId}`;
                 } else {
                     const title = card.querySelector('.card-title').textContent;
-                    console.error(`An error has occurred. Unable to navigate to detailed view for: ${title}\n\nPlease contact support.`);
+                    alert(`An error has occurred. Unable to navigate to detailed view for: ${title}\n\nPlease contact support.`);
                 }
             }
         });
     </script>
 </body>
+
 </html>
