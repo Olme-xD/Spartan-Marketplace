@@ -46,60 +46,88 @@
         // Hard Coded Data for Cards
         const cardsData = [{
             id: 1,
+            category: "Electronics",
             title: "iPhone 17 for Sale",
             description: "Used iPhone 12 in excellent condition. Comes with charger.",
             price: "FREE",
-            images: ["https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-black_GEO_US?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxa3pYQjBteGp2cFFHL09TNGhVUUhxeHFkSUJZcmNjVXZ4cDk3YTVMcWk4SHF2TWlpSzUzejRCZGt2SjJUNGl1VEE4bm1RcmlWRWp2eDN1WHNkSjNmUmJRdGRDSXo3RG9GTXJVdDhBcERxMEQ&traceId=1"],
-            user_name: "user1"
+            images: ["https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-black_GEO_US?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxa3pYQjBteGp2cFFHL09TNGhVUUhxeHFkSUJZcmNjVXZ4cDk3YTVMcWk4SHF2TWlpSzUzejRCZGt2SjJUNGl1VEE4bm1RcmlWRWp2eDN1WHNkSjNmUmJRdGRDSXo3RG9GTXJVdDhBcERxMEQ&traceId=1"]
         }, {
             id: 2,
+            category: "Furniture",
             title: "Sofa Set - Like New",
             description: "Comfortable 3-piece sofa set, barely used.",
             price: "$300",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff1ffd1b0-78ab-4dc8-93db-2d83a972d86d_2.233e2d7c15408603e9f54bfa58aad1c3.jpeg&f=1&nofb=1&ipt=3d879ac51d08db2ff6b0e14179127c906f56dd3633d311096dc4f940980bad37"],
-            user_name: "user2"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff1ffd1b0-78ab-4dc8-93db-2d83a972d86d_2.233e2d7c15408603e9f54bfa58aad1c3.jpeg&f=1&nofb=1&ipt=3d879ac51d08db2ff6b0e14179127c906f56dd3633d311096dc4f940980bad37"]
         }, {
             id: 3,
+            category: "Vehicles",
             title: "Mountain Bike",
             description: "A sturdy mountain bike suitable for all terrains. Recently serviced.",
             price: "$450",
-            images: ["https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.singletracks.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F09%2FIMG_1720.jpg&f=1&nofb=1&ipt=bb7c589b802ce321db4adc993ee1acf8adde0566e9c853f2e433fa5ee2e64009"],
-            user_name: "user3"
+            images: ["https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.singletracks.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F09%2FIMG_1720.jpg&f=1&nofb=1&ipt=bb7c589b802ce321db4adc993ee1acf8adde0566e9c853f2e433fa5ee2e64009"]
         }, {
             id: 4,
+            category: "Electronics",
             title: "Gaming Laptop",
             description: "High-performance gaming laptop with the latest specs.",
             price: "$1200",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobots.net%2Fwp-content%2Fuploads%2F2023%2F12%2Fwhat-is-a-gaming-laptop-1701754858.jpg&f=1&nofb=1&ipt=bf612b3e6a479450a016a808ad548853bdfe89accbd6aa294c12e2e93f9f5af2"],
-            user_name: "user4"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobots.net%2Fwp-content%2Fuploads%2F2023%2F12%2Fwhat-is-a-gaming-laptop-1701754858.jpg&f=1&nofb=1&ipt=bf612b3e6a479450a016a808ad548853bdfe89accbd6aa294c12e2e93f9f5af2"]
         }, {
             id: 5,
+            category: "Furniture",
             title: "Dining Table Set",
             description: "Elegant dining table set with 6 chairs.",
             price: "$800",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fouchcart.com%2Fcdn%2Fshop%2Fproducts%2FNadine_6_-_Person_Counter_Height_Dining_Set.jpg%3Fv%3D1637225879%26width%3D800&f=1&nofb=1&ipt=fa91f4aad01a61707c0a6cde405c1b1fc76275c53e37f7718f0e5228f5070bb3"],
-            user_name: "user5"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fouchcart.com%2Fcdn%2Fshop%2Fproducts%2FNadine_6_-_Person_Counter_Height_Dining_Set.jpg%3Fv%3D1637225879%26width%3D800&f=1&nofb=1&ipt=fa91f4aad01a61707c0a6cde405c1b1fc76275c53e37f7718f0e5228f5070bb3"]
         }, {
             id: 6,
+            category: "Electronics",
             title: "Smart TV 55\"",
             description: "55-inch Smart TV with 4K resolution and HDR support. Like new.",
             price: "$700",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.power-cdn.net%2Fimages%2Fh-890a46a61ea24670b1b7e9fbd7645215%2Ffeelingimages%2F1988936%2F1988936_2_1200px_w_g.jpg&f=1&nofb=1&ipt=b16fb66505b427612e4a3f1090bc4fb78b2c0d33d03494be1fe989a9f434b473"],
-            user_name: "user6"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.power-cdn.net%2Fimages%2Fh-890a46a61ea24670b1b7e9fbd7645215%2Ffeelingimages%2F1988936%2F1988936_2_1200px_w_g.jpg&f=1&nofb=1&ipt=b16fb66505b427612e4a3f1090bc4fb78b2c0d33d03494be1fe989a9f434b473"]
         }, {
             id: 7,
+            category: "Clothing",
             title: "Leather Jacket",
             description: "Genuine leather jacket, size M. Stylish and warm for winter.",
             price: "$150",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2F1rgAAOSwWcdlvBNs%2Fs-l400.jpg&f=1&nofb=1&ipt=a19a7fac0fb988672f88ef3067c3e84fe41498ddb984b4a06a2c998d9c4e57e0"],
-            user_name: "user7"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2F1rgAAOSwWcdlvBNs%2Fs-l400.jpg&f=1&nofb=1&ipt=a19a7fac0fb988672f88ef3067c3e84fe41498ddb984b4a06a2c998d9c4e57e0"]
         }, {
             id: 8,
+            category: "Miscellaneous",
             title: "Electric Guitar",
             description: "Fender electric guitar in great condition.",
             price: "$400",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F6c%2F94%2F58%2F6c9458a02f78830c8338fc7fffd56b9c.jpg&f=1&nofb=1&ipt=cf3b4240d765e7b612e815ea75664ad96f5088e532977eeafd7002b90b14babe"],
-            user_name: "user8"
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F6c%2F94%2F58%2F6c9458a02f78830c8338fc7fffd56b9c.jpg&f=1&nofb=1&ipt=cf3b4240d765e7b612e815ea75664ad96f5088e532977eeafd7002b90b14babe"]
+        }, {
+            id: 9,
+            category: "Pets",
+            title: "Little Staircase for Pets",
+            description: "Perfect for small dogs or cats to reach higher places.",
+            price: "$430",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.sgI04Aq-dZLWvNt6JSADtAHaHa%3Fpid%3DApi&f=1&ipt=701d74794de6925ba05fb6d338fc5ef1f30485ce43c10ab78f47ee21213e5362"]
+        }, {
+            id: 10,
+            category: "Books",
+            title: "Computer Science Textbook",
+            description: "Computer Science Textbook - 3rd Edition",
+            price: "$99",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.karousell.com%2Fmedia%2Fphotos%2Fproducts%2F2016%2F05%2F28%2Fcomputer_science_textbook_1464405046_fd2ae2f1.jpg&f=1&nofb=1&ipt=41c49e19aa040615ab5349e7ada4a675e73c8d3509fd9ea6768539edc46709cd"]
+        }, {
+            id: 11,
+            category: "Real Estate",
+            title: "4 Bedroom House",
+            description: "Spacious 4 bedroom, 3 bathroom house in a great neighborhood.",
+            price: "$254,000",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-wp.photoup.net%2Fwp-content%2Fuploads%2F2022%2F09%2F08215613%2Fsky-replacement-after.jpg&f=1&nofb=1&ipt=62df1988d9baf55707eb194376d30f5568b9ffb72cb597709c669da44d908da0"]
+        }, {
+            id: 12,
+            category: "Services",
+            title: "Lawn Mowing Service",
+            description: "Professional lawn mowing and garden maintenance services.",
+            price: "$40 per session",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobshortsmowing.com.au%2Fwp-content%2Fuploads%2F2023%2F02%2FRob-Shorts-Mowing-Lawn-mowing-services-Patterson-Lakes-and-surrounding-suburbs-01.jpg&f=1&nofb=1&ipt=8735339e4cfedac19fd358094dc2f79f27e77fb90548f42220756504538d2af9"]
         }];
 
         // Get listing ID from URL
@@ -182,9 +210,9 @@
             sellerImg.style.height = '30px';
             const sellerTextDiv = document.createElement('div');
             const sellerLink = document.createElement('a');
-            sellerLink.href = listing.user_name;
+            sellerLink.href = 'user_profile.html';//listing.user_name;
             sellerLink.className = 'text-dark text-decoration-none';
-            sellerLink.textContent = 'seller_username';
+            sellerLink.textContent = 'Amazon';
             sellerTextDiv.appendChild(sellerLink);
 
             const starRatingDiv = document.createElement('div');

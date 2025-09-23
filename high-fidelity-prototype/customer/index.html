@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="images/img_test.ico">
+    <link rel="icon" type="image/x-icon" href="images/img_test1.ico">
     <title>Craig List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -39,15 +39,11 @@
                 <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
             </form>
             <!-- User Profile Icon -->
-            <nav class="d-flex align-items-center" id="userProfileNav">
-                <a href="dashboard.html" class="text-light text-decoration-none me-3">
-                    <i class="bi bi-person-circle" style="font-size: 30px;"></i>
-                </a>
-            </nav>
+            <nav class="d-flex align-items-center" id="userProfileNav"></nav>
             <!-- Navigation Links -->
             <nav class="space-x-10" id="navLinks">
-                <a href="login.html" class="btn btn-primary rounded-pill">Login</a>
-                <a href="register.html" class="btn btn-secondary rounded-pill">Register</a>
+                <a href="login.html" class="btn btn-primary rounded-pill me-1 ms-1">Login</a>
+                <a href="register.html" class="btn btn-secondary rounded-pill me-1 ms-1">Register</a>
             </nav>
         </header>
     </div>
@@ -90,8 +86,17 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Simulated User Authentication State
+        // Get user status from URL (for simulation purposes)
+        let urlParams = new URLSearchParams(window.location.search);
+        let loginParam = urlParams.get('loggedIn');
         let isLoggedIn = false;
+        if (loginParam === 'true') {
+            isLoggedIn = true;
+        } else {
+            isLoggedIn = false;
+        }
+
+        // Simulated User Authentication State
         const userProfileNav = document.getElementById('userProfileNav');
         const navLinks = document.getElementById('navLinks');
         if (isLoggedIn) {
@@ -134,7 +139,6 @@
             userProfileNav.appendChild(logoutBtn);
         } else {
             userProfileNav.style.display = 'none';
-            navLinks.style.display = 'flex';
         }
 
         // Hard Coded Data for Categories
@@ -271,8 +275,8 @@
             images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobshortsmowing.com.au%2Fwp-content%2Fuploads%2F2023%2F02%2FRob-Shorts-Mowing-Lawn-mowing-services-Patterson-Lakes-and-surrounding-suburbs-01.jpg&f=1&nofb=1&ipt=8735339e4cfedac19fd358094dc2f79f27e77fb90548f42220756504538d2af9"]
         }];
 
-        // Get listing ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
+        // Get category from URL
+        urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');
 
         // Load Cards into the Main Content Area
