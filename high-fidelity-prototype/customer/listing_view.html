@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HEAD of HTML -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/img_test.ico">
+    <title>Craig List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<!-- BODY of HTML -->
+
+<body class="bg-light text-dark">
+
+    <!-- Navegation Bar -->
+    <div class="sticky-top container-fluid bg-dark text-light">
+        <header class="d-flex justify-content-center align-items-center py-1">
+            <!-- Logo -->
+            <a href="index.html">
+                <img style="width: 100px; height: 100px;" src="images/img_test.png" alt="Logo" class="img-fluid">
+            </a>
+        </header>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container-fluid flex-fill" id="listing-content"></div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p>&copy; 2025 Craig List App</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Hard Coded Data for Cards
+        const cardsData = [{
+            id: 1,
+            category: "Electronics",
+            title: "iPhone 17 for Sale",
+            description: "Used iPhone 12 in excellent condition. Comes with charger.",
+            price: "FREE",
+            images: ["https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-black_GEO_US?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxa3pYQjBteGp2cFFHL09TNGhVUUhxeHFkSUJZcmNjVXZ4cDk3YTVMcWk4SHF2TWlpSzUzejRCZGt2SjJUNGl1VEE4bm1RcmlWRWp2eDN1WHNkSjNmUmJRdGRDSXo3RG9GTXJVdDhBcERxMEQ&traceId=1"]
+        }, {
+            id: 2,
+            category: "Furniture",
+            title: "Sofa Set - Like New",
+            description: "Comfortable 3-piece sofa set, barely used.",
+            price: "$300",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff1ffd1b0-78ab-4dc8-93db-2d83a972d86d_2.233e2d7c15408603e9f54bfa58aad1c3.jpeg&f=1&nofb=1&ipt=3d879ac51d08db2ff6b0e14179127c906f56dd3633d311096dc4f940980bad37"]
+        }, {
+            id: 3,
+            category: "Vehicles",
+            title: "Mountain Bike",
+            description: "A sturdy mountain bike suitable for all terrains. Recently serviced.",
+            price: "$450",
+            images: ["https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.singletracks.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F09%2FIMG_1720.jpg&f=1&nofb=1&ipt=bb7c589b802ce321db4adc993ee1acf8adde0566e9c853f2e433fa5ee2e64009"]
+        }, {
+            id: 4,
+            category: "Electronics",
+            title: "Gaming Laptop",
+            description: "High-performance gaming laptop with the latest specs.",
+            price: "$1200",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobots.net%2Fwp-content%2Fuploads%2F2023%2F12%2Fwhat-is-a-gaming-laptop-1701754858.jpg&f=1&nofb=1&ipt=bf612b3e6a479450a016a808ad548853bdfe89accbd6aa294c12e2e93f9f5af2"]
+        }, {
+            id: 5,
+            category: "Furniture",
+            title: "Dining Table Set",
+            description: "Elegant dining table set with 6 chairs.",
+            price: "$800",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fouchcart.com%2Fcdn%2Fshop%2Fproducts%2FNadine_6_-_Person_Counter_Height_Dining_Set.jpg%3Fv%3D1637225879%26width%3D800&f=1&nofb=1&ipt=fa91f4aad01a61707c0a6cde405c1b1fc76275c53e37f7718f0e5228f5070bb3"]
+        }, {
+            id: 6,
+            category: "Electronics",
+            title: "Smart TV 55\"",
+            description: "55-inch Smart TV with 4K resolution and HDR support. Like new.",
+            price: "$700",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.power-cdn.net%2Fimages%2Fh-890a46a61ea24670b1b7e9fbd7645215%2Ffeelingimages%2F1988936%2F1988936_2_1200px_w_g.jpg&f=1&nofb=1&ipt=b16fb66505b427612e4a3f1090bc4fb78b2c0d33d03494be1fe989a9f434b473"]
+        }, {
+            id: 7,
+            category: "Clothing",
+            title: "Leather Jacket",
+            description: "Genuine leather jacket, size M. Stylish and warm for winter.",
+            price: "$150",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2F1rgAAOSwWcdlvBNs%2Fs-l400.jpg&f=1&nofb=1&ipt=a19a7fac0fb988672f88ef3067c3e84fe41498ddb984b4a06a2c998d9c4e57e0"]
+        }, {
+            id: 8,
+            category: "Miscellaneous",
+            title: "Electric Guitar",
+            description: "Fender electric guitar in great condition.",
+            price: "$400",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F6c%2F94%2F58%2F6c9458a02f78830c8338fc7fffd56b9c.jpg&f=1&nofb=1&ipt=cf3b4240d765e7b612e815ea75664ad96f5088e532977eeafd7002b90b14babe"]
+        }, {
+            id: 9,
+            category: "Pets",
+            title: "Little Staircase for Pets",
+            description: "Perfect for small dogs or cats to reach higher places.",
+            price: "$430",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.sgI04Aq-dZLWvNt6JSADtAHaHa%3Fpid%3DApi&f=1&ipt=701d74794de6925ba05fb6d338fc5ef1f30485ce43c10ab78f47ee21213e5362"]
+        }, {
+            id: 10,
+            category: "Books",
+            title: "Computer Science Textbook",
+            description: "Computer Science Textbook - 3rd Edition",
+            price: "$99",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.karousell.com%2Fmedia%2Fphotos%2Fproducts%2F2016%2F05%2F28%2Fcomputer_science_textbook_1464405046_fd2ae2f1.jpg&f=1&nofb=1&ipt=41c49e19aa040615ab5349e7ada4a675e73c8d3509fd9ea6768539edc46709cd"]
+        }, {
+            id: 11,
+            category: "Real Estate",
+            title: "4 Bedroom House",
+            description: "Spacious 4 bedroom, 3 bathroom house in a great neighborhood.",
+            price: "$254,000",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-wp.photoup.net%2Fwp-content%2Fuploads%2F2022%2F09%2F08215613%2Fsky-replacement-after.jpg&f=1&nofb=1&ipt=62df1988d9baf55707eb194376d30f5568b9ffb72cb597709c669da44d908da0"]
+        }, {
+            id: 12,
+            category: "Services",
+            title: "Lawn Mowing Service",
+            description: "Professional lawn mowing and garden maintenance services.",
+            price: "$40 per session",
+            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.vYszrRtaBe4htOjt3NkbFwHaFm%3Fpid%3DApi&f=1&ipt=faaa30f18617ada564f557b6066429b14a59791ff3ecfc7d4c82094664f052ab&ipo=images"]
+        }];
+
+        // Get listing ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const listingId = parseInt(urlParams.get('id'));
+
+        // Find matching card
+        const listing = cardsData.find(item => item.id === listingId);
+        if (listing) {
+            const listingContainer = document.getElementById('listing-content');
+            listingContainer.style.paddingTop = '20px';
+
+            const mainRow = document.createElement('div');
+            mainRow.className = 'row g-3 mx-auto';
+
+            const leftCol = document.createElement('div');
+            leftCol.className = 'col-md-8 d-flex';
+
+            const thumbnailList = document.createElement('ul');
+            thumbnailList.style.listStyle = 'none';
+            thumbnailList.style.padding = '0';
+            thumbnailList.style.margin = '0';
+            thumbnailList.style.width = '100px';
+            thumbnailList.style.marginRight = '20px';
+            thumbnailList.className = 'thumbnail-list'; // Add class for selection
+
+            const mainImageContainer = document.createElement('div');
+            mainImageContainer.className = 'd-flex justify-content-center align-items-center position-relative';
+            mainImageContainer.style.flexGrow = '1';
+            const mainImage = document.createElement('img');
+            mainImage.src = listing.images[0]; // Corrected line
+            mainImage.className = 'img-fluid';
+            mainImage.style.maxWidth = '100%';
+            mainImage.style.maxHeight = '600px';
+            mainImage.style.objectFit = 'contain';
+            mainImage.alt = listing.title;
+            mainImageContainer.appendChild(mainImage);
+
+            const images = listing.images;
+            images.forEach((imgSrc, index) => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '8px';
+                const thumbnailImg = document.createElement('img');
+                thumbnailImg.src = imgSrc;
+                thumbnailImg.alt = `Thumbnail ${index + 1} of ${listing.title}`; // Improved alt text
+                thumbnailImg.style.width = '100%';
+                thumbnailImg.style.border = '2px solid transparent';
+                thumbnailImg.style.borderRadius = '4px';
+                thumbnailImg.style.cursor = 'pointer';
+                if (index === 0) {
+                    thumbnailImg.style.borderColor = '#007bff';
+                }
+                thumbnailImg.addEventListener('click', () => {
+                    mainImage.src = imgSrc;
+                    document.querySelectorAll('#listing-content .thumbnail-list img').forEach(img => img.style.borderColor = 'transparent');
+                    thumbnailImg.style.borderColor = '#007bff';
+                });
+                li.appendChild(thumbnailImg);
+                thumbnailList.appendChild(li);
+            });
+
+            leftCol.appendChild(thumbnailList);
+            leftCol.appendChild(mainImageContainer);
+            const rightCol = document.createElement('div');
+            rightCol.className = 'col-md-4';
+            const detailsSidebar = document.createElement('div');
+            detailsSidebar.className = 'p-3 rounded shadow-sm';
+            detailsSidebar.style.backgroundColor = '#fff';
+            const titleH3 = document.createElement('h3');
+            titleH3.className = 'mb-2';
+            titleH3.textContent = listing.title;
+
+            const sellerInfoDiv = document.createElement('div');
+            sellerInfoDiv.className = 'd-flex align-items-center mb-3';
+            const sellerImg = document.createElement('img');
+            sellerImg.src = 'images/img_test.png';
+            sellerImg.alt = 'Seller Avatar';
+            sellerImg.className = 'rounded-circle me-2';
+            sellerImg.style.width = '30px';
+            sellerImg.style.height = '30px';
+            const sellerTextDiv = document.createElement('div');
+            const sellerLink = document.createElement('a');
+            sellerLink.href = 'user_profile.html';//listing.user_name;
+            sellerLink.className = 'text-dark text-decoration-none';
+            sellerLink.textContent = 'Amazon';
+            sellerTextDiv.appendChild(sellerLink);
+
+            const starRatingDiv = document.createElement('div');
+            const rating = 4;
+            for (let i = 0; i < 5; i++) {
+                const starIcon = document.createElement('i');
+                starIcon.className = `bi bi-star-fill me-1`;
+                if (i < rating) {
+                    starIcon.style.color = '#efcc00';
+                } else {
+                    starIcon.style.color = '#e4e5e9';
+                }
+                starRatingDiv.appendChild(starIcon);
+            }
+            sellerTextDiv.appendChild(starRatingDiv);
+            sellerInfoDiv.appendChild(sellerImg);
+            sellerInfoDiv.appendChild(sellerTextDiv);
+
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'my-3';
+            priceDiv.textContent = `${listing.price}`;
+            priceDiv.style.fontSize = '2.5rem';
+            priceDiv.style.fontWeight = '700';
+
+            const conditionDiv = document.createElement('div');
+            conditionDiv.className = 'mb-3';
+            const conditionLabel = document.createElement('b');
+            conditionLabel.textContent = 'Condition: ';
+            const conditionValue = document.createTextNode('New ');
+            const infoIcon = document.createElement('i');
+            infoIcon.className = 'bi bi-info-circle text-secondary';
+            conditionDiv.appendChild(conditionLabel);
+            conditionDiv.appendChild(conditionValue);
+            conditionDiv.appendChild(infoIcon);
+
+            const actionButtonsDiv = document.createElement('div');
+            actionButtonsDiv.className = 'd-grid gap-2';
+            const contactSellerButton = document.createElement('button');
+            contactSellerButton.className = 'btn btn-primary btn-lg';
+            contactSellerButton.textContent = 'Contact Seller';
+            actionButtonsDiv.appendChild(contactSellerButton);
+
+            detailsSidebar.appendChild(titleH3);
+            detailsSidebar.appendChild(sellerInfoDiv);
+            detailsSidebar.appendChild(priceDiv);
+            detailsSidebar.appendChild(conditionDiv);
+            detailsSidebar.appendChild(actionButtonsDiv);
+
+            const productDetailsCard = document.createElement('div');
+            productDetailsCard.className = 'p-3 rounded shadow-sm mt-3';
+            productDetailsCard.style.backgroundColor = '#fff';
+            const productDetailsTitle = document.createElement('h4');
+            productDetailsTitle.className = 'mb-3';
+            productDetailsTitle.textContent = 'Product Details';
+            const productDescription = document.createElement('p');
+            productDescription.textContent = listing.description;
+
+            productDetailsCard.appendChild(productDetailsTitle);
+            productDetailsCard.appendChild(productDescription);
+            rightCol.appendChild(detailsSidebar);
+            rightCol.appendChild(productDetailsCard);
+            mainRow.appendChild(leftCol);
+            mainRow.appendChild(rightCol);
+
+            listingContainer.appendChild(mainRow);
+        } else {
+            // If no listing is found, redirect to the index page
+            alert("Listing not found. Redirecting to home page.");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>
