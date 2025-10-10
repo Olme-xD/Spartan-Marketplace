@@ -1,5 +1,5 @@
 # Software Requirements Specification
-## For <Craig List App>
+## For <Spartan Marketplace>
 
 Version 0.1  
 Prepared by Olme Matias & Omar Morales  
@@ -41,16 +41,17 @@ Table of Contents
 |Olme Matias|   9/13  | Added functional requirements for customers           |  1.1      |
 |Omar Morales|  9/17  | Added section #2 statements                           |  1.2      |
 |Omar Morales|  9/17  | Added non-functional reqs and provider functional reqs|  1.3      |
+|Olme Matias | 10/10  | Changed name from CraigList to Spartan Marketplace    |  1.4      |
 
 ## 1. Introduction
 
 ### 1.1 Document Purpose
-The purpose of this Software Requirements Document (SRD) is to describe the client-oriented and developer-oriented requirements for the Craig List App website.
+The purpose of this Software Requirements Document (SRD) is to describe the client-oriented and developer-oriented requirements for the Spartan Marketplace website.
 Client-oriented requirements describe the system from the client’s perspective. These requirements include a description of the different types of users served by the system.
 Developer-oriented requirements describe the system from a software developer’s perspective. These requirements include a detailed description of functional, data, performance, and other important requirements.
 
 ### 1.2 Product Scope
-The purpose of our Craigslist App is to help consumers and providers easily buy and sell products and services. This web-based application simplifies subscription management and makes it easier to manage products, ensuring a straightforward experience for everyone.
+The purpose of our Spartan Marketplace is to help consumers and providers easily buy and sell products and services. This web-based application simplifies subscription management and makes it easier to manage products, ensuring a straightforward experience for everyone.
 
 ### 1.3 Definitions, Acronyms and Abbreviations
 
@@ -58,7 +59,7 @@ The purpose of our Craigslist App is to help consumers and providers easily buy 
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Java       | A programming language originally developed by James Gosling at Sun Microsystems. We will be using this language to build the backend service for LocalHarvest Hub.                 |
 | Postgresql | Open-source relational database management system.                                                                                                                                 |
-| Webstudio  | Open-source web builder that will be used to build our web application.                                                                                                                                         |
+| Bootstrap  | A set of classes for CSS.                                                                                                                                         |
 | API        | Application Programming Interface. This will be used to interface the backend and the fronted of our application.                                                                  |
 | HTML       | Hypertext Markup Language. This is the code that will be used to structure and design the web application and its content.                                                         |
 | CSS        | Cascading Style Sheets. Will be used to add styles and appearance to the web app.                                                                                                    |
@@ -66,16 +67,16 @@ The purpose of our Craigslist App is to help consumers and providers easily buy 
 | VS Code    | An integrated development environment (IDE). This is where our system will be created.                                                                                             |
 
 ### 1.4 References
-https://webstudio.is/
+
 
 ### 1.5 Document Overview
 Section 1 is a general introduction to the document, intended for any readers. Section 2 is focused on the product and its features. This section is for customers and business stakeholders. Section 3 specifies the requirements and constraints for the product and development process. This section is intended for all stakeholders, especially the development team.
 
 ## 2. Product Overview
-The Craig List app is a web-based platform designed to let customers buy or sell products and services in an easy and efficient way. Customers can browse listings, purchase services or goods, leave reviews. Providers can post and manage their listings, view engagement statistics, and respond to feedback. Administrators manage platform moderation and overall usage statistics. The app nensures a straightforward, community-driven marketplace that minimizes waste by allowing users to resell subscriptions or items they no longer need.
+The Spartan Marketplace is a web-based platform designed to let customers buy or sell products and services in an easy and efficient way. Customers can browse listings, purchase services or goods, leave reviews. Providers can post and manage their listings, view engagement statistics, and respond to feedback. Administrators manage platform moderation and overall usage statistics. The app nensures a straightforward, community-driven marketplace that minimizes waste by allowing users to resell subscriptions or items they no longer need.
 
 ### 2.1 Product Functions
-The Craig List App supports three primary roles:
+The Spartan Marketplace supports three primary roles:
 - Customers: Create and manage profiles, browse listings, contact providers, purchase item/services, and write reviews.
 - Provider: Create, edit and remove listings, track customer engagement and respond to customer reviews.
 - Administrator: Moderate users, services and reviews, and view usage statistics such as views, logins.

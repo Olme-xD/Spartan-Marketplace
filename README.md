@@ -1,10 +1,10 @@
 ## Title
-> Craig List App
+> Spartan Marketplace
 ## Team Members
 > Olme Matias Molina \
 > Omar Morales
 ## Description
-> This Craig list app is meant to let customers buy or sell products or services to others. The main motivation behind this app is to create a platform to let users sells things they do not no longer want or need. The Craig list will also allow customers/providers sell subscriptions they do not longer want. Eliminating potential waste and providing users with the opportunity to receive some compensation.
+> This Spartan Marketplace is meant to let customers buy or sell products or services to others. The main motivation behind this app is to create a platform to let users sells things they do not no longer want or need. The Spartan Marketplace will also allow customers/providers sell subscriptions they do not longer want. Eliminating potential waste and providing users with the opportunity to receive some compensation.
 ## App Functions
 1. Customer (the user with the customer role):
     1. Create/modify customer profile - The system shall provide a login system for the customer.
