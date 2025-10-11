@@ -32,7 +32,7 @@ The **Spartan Marketplace** is a web-based platform designed to let customers bu
 
 ## 2. Use Cases
 ### 2.1 Use Case Model
-`[Link to Use Case Model Diagram]`
+![Link to Use Case Model Diagram](https://github.com/Olme-xD/Spartan-Marketplace/tree/main/doc/Object-Oriented-Design/use-case.png)
 
 ### 2.2 Use Case Descriptions
 
@@ -73,9 +73,9 @@ An Administrator shall be able to view overall platform usage statistics, such a
 ---
 
 ## 3. UML Class Diagram
-`[Link to UML Class Diagram]`
+![Link to UML Class Diagram]()
 
 ---
 
 ## 4. Database Schema
-`[Link to Database Schema Diagram]`
+![Link to Database Schema Diagram](https://github.com/Olme-xD/Spartan-Marketplace/tree/main/doc/Object-Oriented-Design/schema.png)
