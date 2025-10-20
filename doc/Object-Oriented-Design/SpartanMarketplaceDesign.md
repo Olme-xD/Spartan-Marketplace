@@ -22,6 +22,7 @@
 | Name | Date | Reason For Changes | Version |
 | :--- | :--- | :--- | :--- |
 | Olme Matias | 10/11 | Added section #1, #2.2.2, and #2.2.3 statements | 1.0 |
+| Omar Morales | 10/20 | Added section #2.2.1 statements | 1.1 |
 
 ---
 
@@ -38,14 +39,19 @@ The **Spartan Marketplace** is a web-based platform designed to let customers bu
 
 #### 2.2.1 Actor: Provider
 ##### 2.2.1.1 Sign Up / Log In
+A Provider can sign up to create their profile. They shall be able to sign in using their registered email and password to access their dashboard and manage their listings.
 
 ##### 2.2.1.2 Manage Profile
+A Provider shall be able to view and update their profile information, including contact details, bio, and account settings to maintain an accurate presence on the platform.
 
 ##### 2.2.1.3 Create and Manage Listings
+A Provider shall be able to create new listings for products or services, edit existing listing details, and remove listings that are no longer available on the platform.
 
 ##### 2.2.1.4 Respond to Reviews
+A Provider shall be able to read reviews left by Customers and post responses to address feedback, answer questions, or thank customers for their comments.
 
 ##### 2.2.1.5 Rate Customers
+After completing a transaction, a Provider shall be able to leave a rating for the Customer to help build trust and accountability within the marketplace community.
 
 #### 2.2.2 Actor: Customer
 ##### 2.2.2.1 Sign Up / Log In
