@@ -79,7 +79,7 @@ An Administrator shall be able to view overall platform usage statistics, such a
 ---
 
 ## 3. UML Class Diagram
-![Link to UML Class Diagram]()
+![Link to UML Class Diagram](https://github.com/Olme-xD/Spartan-Marketplace/blob/main/doc/Object-Oriented-Design/class-diagram.png)
 
 ---
 
