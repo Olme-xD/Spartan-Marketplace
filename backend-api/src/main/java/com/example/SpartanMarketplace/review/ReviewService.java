@@ -72,10 +72,12 @@ public class ReviewService {
     }
 
     /**
-     * Calculate average rating for a product
+     * Calculate average rating for a provider's profile
+     * Use Case: Rate Profiles
+     * This calculates the average rating across all reviews on all products by this provider
      */
-    public double getAverageRating(Product product) {
-        List<Review> reviews = reviewRepository.findByProduct(product);
+    public double getAverageProviderRating(User provider) {
+        List<Review> reviews = reviewRepository.findByProductUser(provider);
         return reviews.stream()
             .mapToInt(Review::getRating)
             .average()
