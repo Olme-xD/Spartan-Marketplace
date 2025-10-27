@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @JsonProperty("phone_number")
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -49,13 +51,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
     private List<Product> products = new ArrayList<>();
-
     
-    // @OneToMany(mappedBy = "user")
-    // @JsonIgnoreProperties("user")
-    // private List<Transaction> transactions = new ArrayList<>();
-    
-
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
     private List<Review> reviews = new ArrayList<>();

@@ -1,7 +1,7 @@
 package com.example.SpartanMarketplace.transaction;
 
 import com.example.SpartanMarketplace.user.UserService;
-import com.example.SpartanMarketplace.product.ProductService;
+// import com.example.SpartanMarketplace.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
     private final UserService userService;
-    private final ProductService productService;
+    // private final ProductService productService;
 
     /**
      * Endpoint to create a new transaction (purchase)
@@ -35,7 +35,7 @@ public class TransactionController {
     }
 
     /**
-     * Endpoint to get all transactions for a user
+     * Endpoint to get all transactions for a user (purchase history)
      * GET /api/transactions/user/{userId}
      */
     @GetMapping("/user/{userId}")
@@ -44,16 +44,7 @@ public class TransactionController {
     }
 
     /**
-     * Endpoint to get all transactions for a product
-     * GET /api/transactions/product/{productId}
-     */
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Transaction>> getProductTransactions(@PathVariable Long productId) {
-        return ResponseEntity.ok(transactionService.getTransactionsByProduct(productService.getProductById(productId)));
-    }
-
-    /**
-     * Endpoint to get all transactions for a provider's products
+     * Endpoint to get all transactions for a provider's products (sales history)
      * GET /api/transactions/provider/{providerId}
      */
     @GetMapping("/provider/{providerId}")
