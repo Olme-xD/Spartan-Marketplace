@@ -51,13 +51,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
     private List<Product> products = new ArrayList<>();
-
     
-    // @OneToMany(mappedBy = "user")
-    // @JsonIgnoreProperties("user")
-    // private List<Transaction> transactions = new ArrayList<>();
-    
-
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
     private List<Review> reviews = new ArrayList<>();

@@ -43,15 +43,6 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getTransactionsByUser(userService.getUserById(userId)));
     }
 
-    // /**
-    //  * Endpoint to get all transactions for a product
-    //  * GET /api/transactions/product/{productId}
-    //  */
-    // @GetMapping("/product/{productId}")
-    // public ResponseEntity<List<Transaction>> getProductTransactions(@PathVariable Long productId) {
-    //     return ResponseEntity.ok(transactionService.getTransactionsByProduct(productService.getProductById(productId)));
-    // }
-
     /**
      * Endpoint to get all transactions for a provider's products (sales history)
      * GET /api/transactions/provider/{providerId}

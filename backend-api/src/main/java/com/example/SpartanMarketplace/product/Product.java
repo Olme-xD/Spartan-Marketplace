@@ -2,9 +2,6 @@ package com.example.SpartanMarketplace.product;
 
 import com.example.SpartanMarketplace.user.User;
 import com.example.SpartanMarketplace.listing.Listing;
-//import com.example.SpartanMarketplace.transaction.Transaction;
-//import com.example.SpartanMarketplace.review.Review;
-//import com.example.SpartanMarketplace.message.Message;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,8 +11,6 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
-// import java.util.ArrayList;
-// import java.util.List;
 
 @Entity
 @Data
@@ -49,17 +44,5 @@ public class Product {
 
     @Column(nullable = false)
     private boolean isActive = true;
-
-    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    // @JsonIgnoreProperties("product")
-    // private List<Transaction> transactions = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    // @JsonIgnoreProperties("product")
-    // private List<Review> reviews = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    // @JsonIgnoreProperties("product")
-    // private List<Message> messages = new ArrayList<>();
 
 }
