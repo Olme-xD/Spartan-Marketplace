@@ -2,6 +2,7 @@ package com.example.SpartanMarketplace.transaction;
 
 import com.example.SpartanMarketplace.user.User;
 import com.example.SpartanMarketplace.product.Product;
+import com.example.SpartanMarketplace.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,29 @@ import java.util.List;
 @Transactional
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final ProductRepository productRepository;
 
     /**
      * Create a new transaction (complete purchase)
+     * Marks product as sold/inactive
      * Use Case 2.2.2.3: Purchase Item or Service
      */
     public Transaction createTransaction(Transaction transaction) {
-        return transactionRepository.save(transaction);
+        Product product = transaction.getProduct();
+        
+        // Check if product is still available
+        if (!product.isActive()) {
+            throw new IllegalStateException("Product is no longer available");
+        }
+        
+        // Save the transaction
+        Transaction savedTransaction = transactionRepository.save(transaction);
+        
+        // Mark product as sold
+        product.setActive(false);
+        productRepository.save(product);
+        
+        return savedTransaction;
     }
 
     public Transaction getTransactionById(Long id) {
