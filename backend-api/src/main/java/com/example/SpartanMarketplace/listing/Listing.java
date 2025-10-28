@@ -23,7 +23,7 @@ public class Listing {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnoreProperties("listings")
+    @JsonIgnoreProperties({"listings", "password"})
     private User user;
 
     @NotBlank

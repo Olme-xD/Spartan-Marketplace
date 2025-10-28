@@ -61,29 +61,11 @@ public class ListingController {
     }
 
     /**
-     * Endpoint to get active listings for a user
-     * GET /api/listings/user/{userId}/active
-     */
-    @GetMapping("/user/{userId}/active")
-    public ResponseEntity<List<Listing>> getUserActiveListings(@PathVariable Long userId) {
-        return ResponseEntity.ok(listingService.getActiveListingsByUser(userService.getUserById(userId)));
-    }
-
-    /**
      * Endpoint to get all active listings
      * GET /api/listings/active
      */
     @GetMapping("/active")
     public ResponseEntity<List<Listing>> getAllActiveListings() {
         return ResponseEntity.ok(listingService.getAllActiveListings());
-    }
-
-    /**
-     * Endpoint to get listings by category
-     * GET /api/listings/category/{category}
-     */
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<Listing>> getListingsByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(listingService.getListingsByCategory(category));
     }
 }

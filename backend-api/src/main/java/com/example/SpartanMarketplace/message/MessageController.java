@@ -1,6 +1,5 @@
 package com.example.SpartanMarketplace.message;
 
-import com.example.SpartanMarketplace.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;
-    private final ProductService productService;
 
     /**
      * Endpoint to send a message
@@ -30,33 +28,6 @@ public class MessageController {
     @GetMapping("/{id}")
     public ResponseEntity<Message> getMessage(@PathVariable Long id) {
         return ResponseEntity.ok(messageService.getMessageById(id));
-    }
-
-    /**
-     * Endpoint to get all messages for a product
-     * GET /api/messages/product/{productId}
-     */
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Message>> getProductMessages(@PathVariable Long productId) {
-        return ResponseEntity.ok(messageService.getMessagesByProduct(productService.getProductById(productId)));
-    }
-
-    /**
-     * Endpoint to get all messages for a buyer
-     * GET /api/messages/buyer/{buyerId}
-     */
-    @GetMapping("/buyer/{buyerId}")
-    public ResponseEntity<List<Message>> getBuyerMessages(@PathVariable Long buyerId) {
-        return ResponseEntity.ok(messageService.getMessagesByBuyerId(buyerId));
-    }
-
-    /**
-     * Endpoint to get all messages for a seller
-     * GET /api/messages/seller/{sellerId}
-     */
-    @GetMapping("/seller/{sellerId}")
-    public ResponseEntity<List<Message>> getSellerMessages(@PathVariable Long sellerId) {
-        return ResponseEntity.ok(messageService.getMessagesBySellerId(sellerId));
     }
 
     /**
