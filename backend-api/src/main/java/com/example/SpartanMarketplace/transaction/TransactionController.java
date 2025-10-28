@@ -1,7 +1,6 @@
 package com.example.SpartanMarketplace.transaction;
 
 import com.example.SpartanMarketplace.user.UserService;
-// import com.example.SpartanMarketplace.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
     private final UserService userService;
-    // private final ProductService productService;
 
     /**
      * Endpoint to create a new transaction (purchase)
@@ -41,24 +39,5 @@ public class TransactionController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Transaction>> getUserTransactions(@PathVariable Long userId) {
         return ResponseEntity.ok(transactionService.getTransactionsByUser(userService.getUserById(userId)));
-    }
-
-    /**
-     * Endpoint to get all transactions for a provider's products (sales history)
-     * GET /api/transactions/provider/{providerId}
-     */
-    @GetMapping("/provider/{providerId}")
-    public ResponseEntity<List<Transaction>> getProviderTransactions(@PathVariable Long providerId) {
-        return ResponseEntity.ok(transactionService.getTransactionsForProvider(userService.getUserById(providerId)));
-    }
-
-    /**
-     * Endpoint to delete a transaction
-     * DELETE /api/transactions/{id}
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteTransaction(id);
-        return ResponseEntity.noContent().build();
     }
 }
