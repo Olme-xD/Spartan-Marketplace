@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,26 +24,34 @@ public class TransactionService {
      * Use Case 2.2.2.3: Purchase Item or Service
      */
     public Transaction createTransaction(Transaction transaction) {
-        Product product = transaction.getProduct();
-        
+        // Fetch the FULL product from database (not the partial one from request)
+        Product product = productRepository.findById(transaction.getProduct().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
         // Check if product is still available
         if (!product.isActive()) {
             throw new IllegalStateException("Product is no longer available");
         }
-        
+
+        // Set the fetched product on the transaction
+        transaction.setProduct(product);
+
+        // Set transaction date to now
+        transaction.setTransactionDate(LocalDateTime.now());
+
         // Save the transaction
         Transaction savedTransaction = transactionRepository.save(transaction);
-        
+
         // Mark product as sold
         product.setActive(false);
         productRepository.save(product);
-        
+
         return savedTransaction;
     }
 
     public Transaction getTransactionById(Long id) {
         return transactionRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
     }
 
     /**

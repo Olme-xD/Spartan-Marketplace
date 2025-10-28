@@ -2,14 +2,14 @@ package com.example.SpartanMarketplace.user;
 
 import com.example.SpartanMarketplace.listing.Listing;
 import com.example.SpartanMarketplace.product.Product;
-//import com.example.SpartanMarketplace.transaction.Transaction;
 import com.example.SpartanMarketplace.review.Review;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -45,15 +45,15 @@ public class User {
     private LocalDateTime dateCreated = LocalDateTime.now();
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private List<Listing> listings = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
     
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
     public User(Long id) {
