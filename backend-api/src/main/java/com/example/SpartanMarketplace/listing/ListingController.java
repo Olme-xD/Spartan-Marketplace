@@ -61,6 +61,15 @@ public class ListingController {
     }
 
     /**
+     * Endpoint to get all active listings by category
+     * GET /api/listings/category/{category}
+     */
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Listing>> getListingsByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(listingService.getListingsByCategory(category));
+    }
+
+    /**
      * Endpoint to get all active listings
      * GET /api/listings/active
      */

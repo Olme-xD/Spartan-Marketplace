@@ -72,6 +72,6 @@ public class ListingService {
     }
 
     public List<Listing> getListingsByCategory(String category) {
-        return listingRepository.findByCategory(category);
+        return listingRepository.findByCategoryAndIsActive(category, true);
     }
 }

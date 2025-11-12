@@ -1,8 +1,12 @@
 package com.example.SpartanMarketplace.product;
 
 import com.example.SpartanMarketplace.listing.ListingService;
+import com.example.SpartanMarketplace.user.UserService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+//import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ListingService listingService;
+    private final UserService userService;
 
     /**
      * Endpoint to create a new product
@@ -49,6 +54,15 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    /**
+     * Endpoint to get all products for a user
+     * GET /api/products/user/{userId}
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Product>> getUserProducts(@PathVariable Long userId) {
+        return ResponseEntity.ok(productService.getProductsByUser(userService.getUserById(userId)));
     }
 
     /**
