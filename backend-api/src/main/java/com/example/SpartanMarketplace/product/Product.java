@@ -43,6 +43,14 @@ public class Product {
     @Positive
     private BigDecimal price;
 
+    @NotBlank
+    @Column(nullable = false)
+    private String condition;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String imageURLString;
+
     @Column(nullable = false)
     private boolean isActive = true;
 
