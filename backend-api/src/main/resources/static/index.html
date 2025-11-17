@@ -177,17 +177,6 @@
             categoryList.appendChild(li);
         });
 
-        // Search Functionality
-        const searchInput = document.getElementById('searchInputCategories');
-        searchInput.addEventListener('input', function () {
-            const filter = searchInput.value.toLowerCase();
-            const listItems = categoryList.getElementsByTagName('li');
-            Array.from(listItems).forEach(item => {
-                const text = item.textContent || item.innerText;
-                item.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
-            });
-        });
-
         // Get the cards container (defined once in the global scope)
         const cardsContainer = document.getElementById('cardsContainer');
 
@@ -277,6 +266,38 @@
                 }
             }
         });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = searchInput.closest('form');
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const query = searchInput.value.trim();
+            if (query) {
+                searchProducts(query);
+            } else {
+                refreshCards();
+            }
+        });
+
+        // Function to fetch search results
+        function searchProducts(query) {
+            const searchUrl = `http://localhost:8080/api/products/search?q=${encodeURIComponent(query)}`;
+            fetch(searchUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(cardsData => {
+                    loadCards(cardsData); // Re-use your existing loadCards function
+                })
+                .catch(error => {
+                    console.error('Error fetching search results: ', error);
+                    cardsContainer.innerHTML = '<p class="text-dark">Error loading search results. Please try again.</p>';
+                });
+        }
 
         // Initial call to load the cards when the page starts
         refreshCards();
