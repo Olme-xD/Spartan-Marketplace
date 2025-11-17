@@ -5,11 +5,8 @@ import com.example.SpartanMarketplace.listing.Listing;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 
@@ -24,12 +21,10 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "listing_id", nullable = false)
-    @JsonIgnore
     private Listing listing;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private User user;
 
     @NotBlank
@@ -40,7 +35,6 @@ public class Product {
     private String description;
 
     @NotNull
-    @Positive
     private BigDecimal price;
 
     @NotBlank
@@ -48,7 +42,7 @@ public class Product {
     private String condition;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String imageURLString;
 
     @Column(nullable = false)

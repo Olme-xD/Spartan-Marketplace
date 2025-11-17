@@ -27,6 +27,20 @@ public class UserService {
     }
 
     /**
+     * Checks for user login (Login)
+     * Use Case *NOT YET DEFINED*: Login
+     * @return true if valid, false otherwise.
+     */
+    public boolean validateUser(String email, String password) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            return false; // User not found
+        }
+        return user.getPassword().equals(password);
+    }
+
+    /**
      * Update user profile
      * Use Case 2.2.1.2: Manage Profile
      */

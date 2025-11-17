@@ -39,5 +39,4 @@ public class Listing {
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("listing")
     private List<Product> products = new ArrayList<>();
-    
 }

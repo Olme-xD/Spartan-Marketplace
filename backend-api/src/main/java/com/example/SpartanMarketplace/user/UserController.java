@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class UserController {
     private final UserService userService;
 
@@ -16,8 +17,13 @@ public class UserController {
      * POST /api/users
      */
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
+        try {
+            User registeredUser = userService.createUser(user);
+            return ResponseEntity.ok(registeredUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
+        }
     }
 
     /**
@@ -46,5 +52,20 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Endpoint to check user login
+     * POST /api/users/login
+     */
+    @PostMapping("/login")
+    public ResponseEntity<Void> loginUser(@RequestBody LoginRequest loginRequest) {
+        boolean isValid = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
+        
+        if (isValid) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(401).build();
+        }
     }
 }
