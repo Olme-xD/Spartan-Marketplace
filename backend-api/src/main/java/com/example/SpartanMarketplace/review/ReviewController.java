@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,6 +52,24 @@ public class ReviewController {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Emdpoint to get all reviews for a provider(user)
+     * GET /api/reviews/provider/{providerId}
+     */
+    @GetMapping("/provider/{providerId}")
+    public ResponseEntity<List<Review>> getProviderReviews(@PathVariable Long providerId) {
+        return ResponseEntity.ok(reviewService.getReviewsForProvider(userService.getUserById(providerId)));
+    }
+
+    // /**
+    //  * Endpoint to get all reviews written by a user
+    //  * GET /api/reviews/user/{userId}
+    //  */
+    // @GetMapping("/user/{userId}")
+    // public ResponseEntity<List<Review>> getUserReviews(@PathVariable Long userId) {
+    //     return ResponseEntity.ok(reviewService.getReviewsByUser(userService.getUserById(userId)));
+    // }
 
     /**
      * Endpoint to get average rating for a provider's profile
