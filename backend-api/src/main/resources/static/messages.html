@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="../customer/images/img_test.ico" />
-    <title>Craig List — Messages</title>
+    <link rel="icon" type="image/x-icon" href="../images/img_test1.ico" />
+    <title>Craig List – Messages</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <style>
@@ -15,65 +15,46 @@
             min-height: 100vh;
         }
 
-        main {
-            flex-grow: 1;
-        }
-
-        /* Chat bubbles */
         .bubble {
             display: inline-block;
             padding: .5rem .75rem;
             border-radius: 1rem;
             max-width: 75%;
+            word-wrap: break-word;
         }
 
         .bubble.me {
             background: #0d6efd;
             color: #fff;
-            border-top-right-radius: .25rem;
         }
 
         .bubble.them {
             background: #f1f3f5;
             color: #212529;
-            border-top-left-radius: .25rem;
         }
 
         .msg-row {
             margin-bottom: .5rem;
         }
 
-        .thread-header {
-            background: #f8f9fa;
-        }
-
-        .list-snippet {
-            color: #6c757d;
-            font-size: .875rem;
-        }
-
-        .thread-list .list-group-item {
-            cursor: pointer;
-        }
-
-        .thread-actions {
-            white-space: nowrap;
+        #msgBody {
+            max-height: 400px;
+            overflow-y: auto;
         }
     </style>
 </head>
 
-<body class="bg-light text-light d-flex flex-column min-vh-100">
+<body class="bg-light text-dark">
 
-    <!-- Header -->
+    <!-- Navigation Bar -->
     <div class="sticky-top container-fluid bg-dark text-light">
         <header class="d-flex justify-content-between align-items-center py-1">
-            <a href="../customer/index.html">
-                <img style="width:70px;height:70px" src="../customer/images/img_test.png" alt="Logo"
-                    class="img-fluid" />
+            <a href="../index.html">
+                <img style="width:70px;height:70px" src="../images/img_test1_white.png" alt="Logo" class="img-fluid" />
             </a>
-            <form class="col-md-4 d-flex" role="search" onsubmit="event.preventDefault();">
+            <form class="col-md-4 d-flex" role="search">
                 <input id="searchInput" class="form-control rounded-pill me-2" type="search"
-                    placeholder="Search messages…" aria-label="Search" />
+                    placeholder="Search messages…" />
                 <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
             </form>
             <nav class="d-flex align-items-center">
@@ -85,197 +66,296 @@
                 <a href="messages.html" class="text-light text-decoration-none me-3">Messages</a>
                 <a href="notifications.html" class="text-light text-decoration-none me-3">Notifications</a>
                 <a href="rating.html" class="text-light text-decoration-none me-3">Ratings</a>
-                <a href="../customer/index.html" class="btn btn-outline-light rounded-pill">Logout</a>
+                <a href="../index.html" class="btn btn-outline-light rounded-pill">Logout</a>
             </nav>
         </header>
     </div>
 
-    <!-- Main -->
-    <main class="container py-4 text-dark" id="appRoot">
-    </main>
+    <!-- Main Content Area -->
+    <div class="container flex-grow-1 mt-4">
+        <!-- Message Threads List -->
+        <div id="threadsList">
+            <h1 class="h4 mb-3">Messages</h1>
+            <div class="list-group shadow-sm" id="threadsContainer">
+                <!-- Threads will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Message Thread View (hidden by default) -->
+        <div id="threadView" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h4 mb-0">Conversation</h1>
+                <button class="btn btn-sm btn-outline-secondary" id="backBtn">Back to Messages</button>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <strong id="threadTitle">Loading...</strong>
+                </div>
+                <div class="card-body" id="msgBody">
+                    <!-- Messages will be loaded here -->
+                </div>
+                <div class="card-footer bg-white">
+                    <form id="replyForm" class="d-flex gap-2">
+                        <input id="replyInput" class="form-control" placeholder="Type a reply…" required />
+                        <button class="btn btn-primary" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-dark text-light text-center py-3 mt-4">
-        <p class="mb-0">&copy; 2025 Craig List App</p>
+        <p>&copy; 2025 Craig List App</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Mini data layer (localStorage) 
-        const STORAGE_KEY = 'cl_provider_threads_v1';
+        const CURRENT_USER_ID = 12;
+        let currentThreadId = null;
+        let currentThreadData = null;
 
-        // Seed sample data once
-        function seedIfEmpty() {
-            if (localStorage.getItem(STORAGE_KEY)) return;
-            const now = Date.now();
-            const threads = {
-                john: {
-                    id: 'john',
-                    name: 'John Doe',
-                    subject: 'Interested in your Gaming Laptop',
-                    lastUpdated: now - 1000 * 60 * 60 * 24 * 1,
-                    unread: true,
-                    messages: [
-                        { from: 'them', text: 'Is this still available?', ts: now - 1000 * 60 * 60 * 24 * 1 }
-                    ]
-                },
-                mary: {
-                    id: 'mary',
-                    name: 'Mary Smith',
-                    subject: 'Asking about Dining Table Set',
-                    lastUpdated: now - 1000 * 60 * 60 * 24 * 3,
-                    unread: false,
-                    messages: [
-                        { from: 'them', text: 'Can you deliver?', ts: now - 1000 * 60 * 60 * 24 * 3 }
-                    ]
-                },
-                alex: {
-                    id: 'alex',
-                    name: 'Alex Johnson',
-                    subject: 'Feedback on Mountain Bike',
-                    lastUpdated: now - 1000 * 60 * 60 * 24 * 5,
-                    unread: false,
-                    messages: [
-                        { from: 'them', text: 'Thanks for the quick reply!', ts: now - 1000 * 60 * 60 * 24 * 5 }
-                    ]
-                }
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+        // Format date helper
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Load all message threads
         function loadThreads() {
-            seedIfEmpty();
-            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            fetch(`http://localhost:8080/api/messages/user/${CURRENT_USER_ID}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(chats => {
+                    displayThreads(chats);
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
+                    document.getElementById('threadsContainer').innerHTML =
+                        '<div class="alert alert-danger">Failed to load messages. Please try again.</div>';
+                });
         }
 
-        function saveThreads(threads) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+        // Display threads in the list
+        function displayThreads(chats) {
+            const container = document.getElementById('threadsContainer');
+
+            if (chats.length === 0) {
+                container.innerHTML = '<div class="list-group-item">No messages yet.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            chats.forEach(chat => {
+                const isCurrentUserSeller = chat.sellerId === CURRENT_USER_ID;
+                const otherUserId = isCurrentUserSeller ? chat.buyerId : chat.sellerId;
+                const lastMessage = isCurrentUserSeller ? chat.sellerText : chat.buyerText;
+
+                // Fetch other user's info
+                fetch(`http://localhost:8080/api/users/${otherUserId}`)
+                    .then(response => response.json())
+                    .then(user => {
+                        const threadItem = document.createElement('a');
+                        threadItem.href = '#';
+                        threadItem.className = 'list-group-item list-group-item-action';
+                        threadItem.setAttribute('data-thread-id', chat.chatId);
+                        threadItem.innerHTML = `
+                            <div>
+                                <strong>${user.username || 'User'}</strong> – ${chat.product?.title || 'Product'}
+                                <div class="text-muted small">
+                                    ${formatDate(chat.dateCreated)} · "${lastMessage || '(No message)'}"
+                                </div>
+                            </div>
+                        `;
+
+                        threadItem.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            openThread(chat.chatId);
+                        });
+
+                        container.appendChild(threadItem);
+                    })
+                    .catch(error => {
+                        console.error('Error loading user:', error);
+                    });
+            });
         }
 
-        // Utilities
-        const fmtDate = (ts) => new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-        const getParam = (k) => new URLSearchParams(location.search).get(k);
-        const setParam = (k, v) => {
-            const sp = new URLSearchParams(location.search);
-            v == null ? sp.delete(k) : sp.set(k, v);
-            location.search = sp.toString();
-        };
+        // Open a specific thread
+        function openThread(threadId) {
+            currentThreadId = threadId;
 
-        // Renderers 
-        function renderListView() {
-            const root = document.getElementById('appRoot');
-            const threads = loadThreads();
+            fetch(`http://localhost:8080/api/messages/user/${CURRENT_USER_ID}`)
+                .then(response => response.json())
+                .then(chats => {
+                    const chat = chats.find(c => c.chatId == threadId);
+                    if (!chat) {
+                        alert('Message not found.');
+                        return;
+                    }
 
-            // Search filter
-            const q = (document.getElementById('searchInput').value || '').toLowerCase();
+                    currentThreadData = chat;
+                    const isCurrentUserSeller = chat.sellerId === CURRENT_USER_ID;
+                    const otherUserId = isCurrentUserSeller ? chat.buyerId : chat.sellerId;
 
-            // Sort by lastUpdated desc
-            const items = Object.values(threads)
-                .filter(t => !q || (t.name + ' ' + t.subject + ' ' + (t.messages.at(-1)?.text || '')).toLowerCase().includes(q))
-                .sort((a, b) => b.lastUpdated - a.lastUpdated);
-
-            root.innerHTML = `
-        <h1 class="h4 mb-3">Messages</h1>
-        <div class="list-group shadow-sm thread-list">
-          ${items.map(t => {
-                const last = t.messages.at(-1);
-                return `
-              <a href="?thread=${encodeURIComponent(t.id)}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>${t.name}</strong> — ${t.subject.replace(/^Interested in /, 'Interested in ').replace(/^Asking about /, 'Asking about ')}
-                  <div class="list-snippet">${fmtDate(last.ts)} · “${escapeHtml(last.text)}”</div>
-                </div>
-                ${t.unread ? `<span class="badge bg-primary rounded-pill">New</span>` : ''}
-              </a>
-            `;
-            }).join('')}
-        </div>
-      `;
+                    // Fetch other user's info
+                    fetch(`http://localhost:8080/api/users/${otherUserId}`)
+                        .then(response => response.json())
+                        .then(user => {
+                            displayThread(chat, user, isCurrentUserSeller);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error loading thread:', error);
+                    alert('Failed to load conversation.');
+                });
         }
 
-        function renderThreadView(threadId) {
-            const root = document.getElementById('appRoot');
-            const threads = loadThreads();
-            const t = threads[threadId];
-            if (!t) { setParam('thread', null); return; }
+        // Display thread messages
+        function displayThread(chat, otherUser, isCurrentUserSeller) {
+            document.getElementById('threadsList').style.display = 'none';
+            document.getElementById('threadView').style.display = 'block';
 
-            // Mark as read
-            if (t.unread) { t.unread = false; saveThreads(threads); }
+            document.getElementById('threadTitle').textContent =
+                `Conversation with ${otherUser.username || 'User'} – ${chat.product?.title || 'Product'}`;
 
-            root.innerHTML = `
-        <h1 class="h4 mb-3">Messages</h1>
-        <div class="card shadow-sm">
-          <div class="card-header thread-header d-flex align-items-center justify-content-between">
-            <div><strong>Conversation with ${t.name.split(' ')[0]}</strong></div>
-            <button class="btn btn-sm btn-outline-secondary" id="backBtn">Back</button>
-          </div>
-          <div class="card-body" id="msgBody">
-            ${t.messages.map(m => `
-              <div class="d-flex ${m.from === 'me' ? 'justify-content-end' : 'justify-content-start'} msg-row">
-                <span class="bubble ${m.from === 'me' ? 'me' : 'them'}">${escapeHtml(m.text)}</span>
-              </div>
-            `).join('')}
-          </div>
-          <div class="card-footer bg-white">
-            <form id="replyForm" class="d-flex gap-2">
-              <input id="replyInput" class="form-control" placeholder="Type a reply…" autocomplete="off"/>
-              <button class="btn btn-primary" type="submit">Send</button>
-            </form>
-          </div>
-        </div>
-      `;
+            const msgBody = document.getElementById('msgBody');
+            msgBody.innerHTML = '';
 
-            document.getElementById('backBtn').onclick = () => setParam('thread', null);
+            // Display buyer message if exists
+            if (chat.buyerText) {
+                const isBuyerMe = chat.buyerId === CURRENT_USER_ID;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `d-flex ${isBuyerMe ? 'justify-content-end' : 'justify-content-start'} msg-row`;
+                msgDiv.innerHTML = `
+                    <div>
+                        <div class="bubble ${isBuyerMe ? 'me' : 'them'}">${chat.buyerText}</div>
+                        <div class="small text-muted mt-1 ${isBuyerMe ? 'text-end' : 'text-start'}">
+                            ${formatTime(chat.dateCreated)}
+                        </div>
+                    </div>
+                `;
+                msgBody.appendChild(msgDiv);
+            }
 
-            document.getElementById('replyForm').onsubmit = (e) => {
-                e.preventDefault();
-                const input = document.getElementById('replyInput');
-                const text = input.value.trim();
-                if (!text) return;
+            // Display seller message if exists
+            if (chat.sellerText) {
+                const isSellerMe = chat.sellerId === CURRENT_USER_ID;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `d-flex ${isSellerMe ? 'justify-content-end' : 'justify-content-start'} msg-row`;
+                msgDiv.innerHTML = `
+                    <div>
+                        <div class="bubble ${isSellerMe ? 'me' : 'them'}">${chat.sellerText}</div>
+                        <div class="small text-muted mt-1 ${isSellerMe ? 'text-end' : 'text-start'}">
+                            ${formatTime(chat.dateCreated)}
+                        </div>
+                    </div>
+                `;
+                msgBody.appendChild(msgDiv);
+            }
 
-                // Append message, update preview & timestamps
-                const data = loadThreads();
-                const th = data[threadId];
-                th.messages.push({ from: 'me', text, ts: Date.now() });
-                th.lastUpdated = Date.now();
-                saveThreads(data);
-
-                // Render the new bubble
-                const body = document.getElementById('msgBody');
-                const row = document.createElement('div');
-                row.className = 'd-flex justify-content-end msg-row';
-                row.innerHTML = `<span class="bubble me"></span>`;
-                row.querySelector('.bubble').textContent = text;
-                body.appendChild(row);
-                input.value = '';
-                body.scrollTop = body.scrollHeight;
-            };
-
-            // Keep scroll at bottom
-            const body = document.getElementById('msgBody');
-            body.scrollTop = body.scrollHeight;
+            msgBody.scrollTop = msgBody.scrollHeight;
         }
 
-        // Helpers
-        function escapeHtml(str) {
-            return str.replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
-        }
-
-        // Init / Router
-        function render() {
-            const threadId = getParam('thread');
-            if (threadId) renderThreadView(threadId);
-            else renderListView();
-        }
-
-        // search filters the list view
-        document.getElementById('searchInput').addEventListener('input', () => {
-            if (!getParam('thread')) renderListView();
+        // Back button
+        document.getElementById('backBtn').addEventListener('click', function () {
+            document.getElementById('threadView').style.display = 'none';
+            document.getElementById('threadsList').style.display = 'block';
+            currentThreadId = null;
+            currentThreadData = null;
         });
 
-        // boot
-        seedIfEmpty();
-        render();
+        // Send message
+        document.getElementById('replyForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const input = document.getElementById('replyInput');
+            const message = input.value.trim();
+
+            if (!message || !currentThreadId || !currentThreadData) {
+                return;
+            }
+
+            const isCurrentUserSeller = currentThreadData.sellerId === CURRENT_USER_ID;
+
+            // Fetch current message state first
+            fetch(`http://localhost:8080/api/messages/${currentThreadId}`)
+                .then(response => response.json())
+                .then(currentMessage => {
+                    // Update the appropriate field
+                    const updatedMessage = { ...currentMessage };
+                    if (isCurrentUserSeller) {
+                        updatedMessage.sellerText = message;
+                    } else {
+                        updatedMessage.buyerText = message;
+                    }
+
+                    // Send update
+                    return fetch(`http://localhost:8080/api/messages/${currentThreadId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updatedMessage)
+                    });
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to send message');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Add message to display
+                    const msgBody = document.getElementById('msgBody');
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = 'd-flex justify-content-end msg-row';
+                    msgDiv.innerHTML = `
+                        <div>
+                            <div class="bubble me">${message}</div>
+                            <div class="small text-muted mt-1 text-end">${formatTime(new Date())}</div>
+                        </div>
+                    `;
+                    msgBody.appendChild(msgDiv);
+                    msgBody.scrollTop = msgBody.scrollHeight;
+
+                    input.value = '';
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    alert('Failed to send message. Please try again.');
+                });
+        });
+
+        // Search functionality
+        document.querySelector('form[role="search"]').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const query = document.getElementById('searchInput').value.toLowerCase();
+
+            const items = document.querySelectorAll('#threadsContainer .list-group-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Load threads on page load
+        loadThreads();
     </script>
 </body>
 

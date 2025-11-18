@@ -52,7 +52,7 @@ public class MessageService {
 
     public Message getMessageById(Long id) {
         return messageRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Message not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Message not found"));
     }
 
     public void deleteMessage(Long id) {
@@ -60,5 +60,19 @@ public class MessageService {
             throw new EntityNotFoundException("Message not found");
         }
         messageRepository.deleteById(id);
+    }
+
+    public Message updateMessage(Long chatId, Message messageDetails) {
+        Message message = messageRepository.findById(chatId)
+                .orElseThrow(() -> new EntityNotFoundException("Message not found"));
+
+        if (messageDetails.getBuyerText() != null && !messageDetails.getBuyerText().isEmpty()) {
+            message.setBuyerText(messageDetails.getBuyerText());
+        }
+        if (messageDetails.getSellerText() != null && !messageDetails.getSellerText().isEmpty()) {
+            message.setSellerText(messageDetails.getSellerText());
+        }
+
+        return messageRepository.save(message);
     }
 }
