@@ -47,105 +47,114 @@
 
         // Fecth user profile data from API
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = parseInt(urlParams.get('id'));
-        fetch(`http://localhost:8080/api/users/1`)
-            .then(response => response.json())
+        const userId = urlParams.get('id');
+        fetch(`http://localhost:8080/api/users/${userId}`)
+            .then(response => {
+                if (!response.ok) throw new Error("User not found");
+                return response.json();
+            })
             .then(user => {
-                console.log(user);
-                renderUserProfile(user);
+                return fetch(`http://localhost:8080/api/reviews/provider/${userId}`)
+                    .then(res => res.json())
+                    .then(reviews => {
+                        renderUserProfile(user, reviews);
+                    });
             })
             .catch(error => {
-                console.error('Error fetching user profile:', error);
+                console.error('Error:', error);
                 alert("User profile not found. Redirecting to home page.");
                 window.location.href = "index.html";
-            }
-        );
+            });
+
+        // Function to calculate average rating and ratings breakdown
+        function calculateStats(reviews) {
+            let totalRating = 0;
+            let starCounts = { 5: [0, 0, 0], 4: [0, 0, 0], 3: [0, 0, 0], 2: [0, 0, 0], 1: [0, 0, 0] };
+            const now = new Date();
+            const oneMonthAgo = new Date(); oneMonthAgo.setMonth(now.getMonth() - 1);
+            const sixMonthsAgo = new Date(); sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+            reviews.forEach(review => {
+                const rating = review.rating;
+                const date = new Date(review.dateCreated);
+                totalRating += rating;
+
+                // Put inside buckets
+                if (date >= oneMonthAgo) {
+                    starCounts[rating][0]++; // 1 month
+                } else if (date >= sixMonthsAgo) {
+                    starCounts[rating][1]++; // 6 months
+                } else {
+                    starCounts[rating][2]++; // More than 6 months
+                }
+            });
+
+            const avg = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : 'N/A';
+            return { average: avg, matrix: starCounts, total: reviews.length };
+        }
 
         // Function to render user profile data on the page
-        function renderUserProfile(user) {
+        function renderUserProfile(user, reviews) {
             const userProfileContainer = document.getElementById('user-profile');
-            console.log(user);
+            const stats = calculateStats(reviews);
+            const displayName = user.username || user.name || "Unknown User";
+            let tableRows = '';
+
+            // Build table rows for ratings breakdown
+            for (let i = 5; i >= 1; i--) {
+                let starsHtml = '';
+                for (let s = 0; s < 5; s++) {
+                    if (s < i) starsHtml += '<i class="bi bi-star-fill text-warning me-1"></i>';
+                    else starsHtml += '<i class="bi bi-star text-warning me-1"></i>';
+                }
+
+                tableRows += `
+                    <tr>
+                        <td class="text-start">${starsHtml}</td>
+                        <td>${stats.matrix[i][0]}</td> <td>${stats.matrix[i][1]}</td> <td>${stats.matrix[i][2]}</td>
+                    </tr>
+                `;
+            }
+
+            // Format date
+            let formattedDate = 'N/A';
+            if (user.dateCreated) {
+                const dateObj = new Date(user.dateCreated);
+                formattedDate = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+            }
+
+            // Render HTML
             userProfileContainer.innerHTML = `
                 <div class="bg-white border rounded p-4 mb-4 d-flex align-items-center">
-                    <img class="img-fluid border rounded me-3" style="width: 100px; height: 100px;" src="${user.avatarUrl || 'images/img_test1_white.png'}" alt="User Avatar">
+                    <img class="img-fluid border rounded me-3" style="width: 100px; height: 100px;" 
+                         src="${user.avatarUrl || 'images/img_test1_white.png'}" alt="User Avatar">
                     <div>
-                        <h5 class="mb-1">${user.name} <span class="text-warning">(${user.reviews.rating} <i class="bi bi-star-fill"></i>)</span></h5>
-                        <p class="mb-1">Member since: ${user.dateCreated}</p>
-                        <p class="mb-0">Sold ${user.soldItemsCount} items</p>
+                        <h5 class="mb-1">${displayName} 
+                            <span class="text-warning">(${stats.average} <i class="bi bi-star-fill"></i>)</span>
+                        </h5>
+                        <p class="mb-1">Member since: ${formattedDate}</p>
+                        <p class="mb-0">Total Reviews: ${stats.total}</p>
                     </div>
                 </div>
 
                 <div class="bg-white border rounded p-4">
-                <h5 class="mb-3">Feedback Ratings</h5>
-                <table class="table text-center mb-0">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">1 month</th>
-                            <th scope="col">6 months</th>
-                            <th scope="col">+12 months</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-start"><i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                            </td>
-                            <td>91</td>
-                            <td>40</td>
-                            <td>80</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start"><i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                            </td>
-                            <td>2</td>
-                            <td>4</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start"><i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                            </td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start"><i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                            </td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td class="text-start"><i class="bi bi-star-fill text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                                <i class="bi bi-star text-warning me-1"></i>
-                            </td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>`;
-        }  
+                    <h5 class="mb-3">Feedback Ratings</h5>
+                    <table class="table text-center mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Rating</th>
+                                <th scope="col">Last Month</th>
+                                <th scope="col">Last 6 Months</th>
+                                <th scope="col">Older</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>`
+            ;
+        }
     </script>
 </body>
 

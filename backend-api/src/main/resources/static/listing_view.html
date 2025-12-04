@@ -107,20 +107,35 @@
 
             const sellerTextDiv = document.createElement('div');
             const sellerLink = document.createElement('a');
-            sellerLink.href = 'user_profile.html'; // TODO: make this link dynamic
+            sellerLink.href = `user_profile.html?id=${product.user.id}`;
             sellerLink.className = 'text-dark text-decoration-none';
             sellerLink.textContent = product.user ? product.user.username : 'Unknown Seller';
             sellerTextDiv.appendChild(sellerLink);
 
             // Star rating
             const starRatingDiv = document.createElement('div');
-            const rating = 4;
-            for (let i = 0; i < 5; i++) { // TODO: make stars dynamic
-                const starIcon = document.createElement('i');
-                starIcon.className = `bi bi-star-fill me-1`;
-                starIcon.style.color = (i < rating) ? '#efcc00' : '#e4e5e9';
-                starRatingDiv.appendChild(starIcon);
-            }
+            fetch(`http://localhost:8080/api/reviews/provider/${product.user.id}/rating`)
+                .then(response => {
+                    if (response.ok) return response.json();
+                    return 0; // Default to 0 if the API fails
+                })
+                .then(rating => {
+                    const roundedRating = Math.round(rating);
+                    starRatingDiv.innerHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        const starIcon = document.createElement('i');
+                        starIcon.className = 'bi bi-star-fill me-1';
+                        starIcon.style.color = (i < roundedRating) ? '#efcc00' : '#e4e5e9';
+                        starRatingDiv.appendChild(starIcon);
+                    }
+
+                    const ratingText = document.createElement('span');
+                    ratingText.className = 'text-muted ms-2 small';
+                    ratingText.textContent = rating > 0 ? `(${rating.toFixed(1)})` : '(No ratings)';
+                    starRatingDiv.appendChild(ratingText);
+                })
+                .catch(err => console.error("Error loading rating:", err));
+                
             sellerTextDiv.appendChild(starRatingDiv);
             sellerInfoDiv.appendChild(sellerImg);
             sellerInfoDiv.appendChild(sellerTextDiv);
