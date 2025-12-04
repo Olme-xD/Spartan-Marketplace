@@ -64,12 +64,13 @@
         // Function to render user profile data on the page
         function renderUserProfile(user) {
             const userProfileContainer = document.getElementById('user-profile');
+            console.log(user);
             userProfileContainer.innerHTML = `
                 <div class="bg-white border rounded p-4 mb-4 d-flex align-items-center">
                     <img class="img-fluid border rounded me-3" style="width: 100px; height: 100px;" src="${user.avatarUrl || 'images/img_test1_white.png'}" alt="User Avatar">
                     <div>
-                        <h5 class="mb-1">${user.name} <span class="text-warning">(${user.rating} <i class="bi bi-star-fill"></i>)</span></h5>
-                        <p class="mb-1">Member since: ${new Date(user.createdAt).toLocaleDateString()} in ${user.location}</p>
+                        <h5 class="mb-1">${user.name} <span class="text-warning">(${user.reviews.rating} <i class="bi bi-star-fill"></i>)</span></h5>
+                        <p class="mb-1">Member since: ${user.dateCreated}</p>
                         <p class="mb-0">Sold ${user.soldItemsCount} items</p>
                     </div>
                 </div>

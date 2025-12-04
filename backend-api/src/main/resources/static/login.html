@@ -99,20 +99,30 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(loginData)
-            })
-                .then(response => {
+            }).then(response => {
                     if (response.ok) {
-                        alert('Logged in successfully!');
-                        window.location.href = 'index.html?loggedIn=true';
+                        return response.json();
                     } else {
-                        alert('Invalid email or password.');
+                        throw new Error('Invalid email or password.');
+                    }
+                })
+                .then(user => {
+                    console.log("User data received:", user);
+                    document.cookie = "user_session=active; path=/; max-age=604800";
+
+                    if (user && user.id) {
+                        document.cookie = `user_id=${user.id}; path=/; max-age=604800`;
+                        alert('Logged in successfully!');
+                        window.location.href = 'index.html';
+                    } else {
+                        throw new Error("User ID missing from server response");
                     }
                 })
                 .catch(error => {
                     console.error('Login error:', error);
-                    alert('Login failed. Please try again.');
+                    alert(error.message || 'Login failed. Please try again.');
                 });
-        });
+            });
     </script>
 </body>
 

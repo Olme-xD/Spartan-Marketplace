@@ -119,15 +119,39 @@
             document.getElementById('locationAPI').innerHTML = `<li>Location denied</li>`;
         });
 
-        // Get user status from URL (for simulation purposes)
-        let urlParams = new URLSearchParams(window.location.search);
-        let loginParam = urlParams.get('loggedIn');
+        // Get cookie for login session
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
         let isLoggedIn = false;
-        if (loginParam === 'true') {
-            isLoggedIn = true;
+        let currentUserId = null;
+        if (getCookie("user_session") === "active") {
+            const idFromCookie = getCookie("user_id");
+            if (idFromCookie) {
+                currentUserId = idFromCookie;
+                isLoggedIn = true;
+                console.log("Login verified. User ID:", currentUserId);
+            } else {
+                console.log("Session active, but User ID missing.");
+                isLoggedIn = false;
+            }
         } else {
+            console.log("No active session.");
             isLoggedIn = false;
         }
+
+        // Delete cookie function for logout
+        const logoutBtn = document.createElement('a');
+        logoutBtn.className = 'btn btn-outline-light rounded-pill';
+        logoutBtn.textContent = 'Logout';
+        logoutBtn.href = "#";
+        logoutBtn.onclick = function() {
+            document.cookie = "user_session=; path=/; max-age=0"; // Max-Age=0 deletes cookie instantly
+            document.cookie = "user_id=; path=/; max-age=0";
+            window.location.href = "index.html";
+        };
 
         // Simulated User Authentication State
         const userProfileNav = document.getElementById('userProfileNav');
@@ -160,10 +184,10 @@
             notificationsLink.className = 'text-light text-decoration-none me-3';
             notificationsLink.textContent = 'Notifications';
 
-            const logoutBtn = document.createElement('a');
-            logoutBtn.href = 'index.html';
-            logoutBtn.className = 'btn btn-outline-light rounded-pill';
-            logoutBtn.textContent = 'Logout';
+            //const logoutBtn = document.createElement('a');
+            //logoutBtn.href = 'index.html';
+            //logoutBtn.className = 'btn btn-outline-light rounded-pill';
+            //logoutBtn.textContent = 'Logout';
 
             userProfileNav.appendChild(profileIconLink);
             userProfileNav.appendChild(profileLink);
