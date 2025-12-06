@@ -3,8 +3,11 @@ package com.example.SpartanMarketplace.product;
 import com.example.SpartanMarketplace.listing.ListingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,9 +22,15 @@ public class ProductController {
      * Endpoint to create a new product
      * POST /api/products
      */
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
-        return ResponseEntity.ok(productService.createProduct(product));
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> createProduct(@RequestPart("product") @Valid Product product, @RequestPart(value = "file", required = false) MultipartFile file){
+        try {
+            return ResponseEntity.ok(productService.createProduct(product, file));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Error processing image file");
+        }
     }
 
     /**

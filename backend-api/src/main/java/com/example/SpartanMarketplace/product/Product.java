@@ -41,8 +41,8 @@ public class Product {
     @Column(nullable = false)
     private String condition;
 
-    @NotBlank
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Lob
+    @Column(name = "image_url_string", length = 10000000)
     private String imageURLString;
 
     @Column(nullable = false)

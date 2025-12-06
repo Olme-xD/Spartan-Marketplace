@@ -162,6 +162,10 @@
             const contactSellerButton = document.createElement('button');
             contactSellerButton.className = 'btn btn-primary btn-lg';
             contactSellerButton.textContent = 'Contact Seller';
+            contactSellerButton.onclick = () => {
+                window.location.href = `messages.html?thread=john`; // Placeholder for thread ID
+                //window.location.href = `contact_seller.html?id=${product.user.id}`;
+            };
 
             actionButtonsDiv.appendChild(contactSellerButton);
             detailsSidebar.appendChild(titleH3);
