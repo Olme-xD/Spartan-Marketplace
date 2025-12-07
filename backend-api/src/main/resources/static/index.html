@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HEAD of HTML -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/img_test1.ico">
+    <title>Craig List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<!-- NOTE: Make the user profile CSS customizable (eg. Dark, Light, Rainbow Moving, Disco, etc) -->
+
+<!-- BODY of HTML -->
+
+<body class="bg-light text-light">
+
+    <!-- Navegation Bar -->
+    <div class="sticky-top container-fluid bg-dark text-light">
+        <header class="d-flex justify-content-between align-items-center py-1">
+            <!-- Logo -->
+            <a href="index.html">
+                <img style="width: 75px; height: 70px;" src="images/img_test1_white.png" alt="Logo" class="img-fluid">
+            </a>
+            <!-- Search Bar -->
+            <form class="col-md-4 d-flex" role="search">
+                <input class="form-control rounded-pill me-2" type="search" placeholder="Search" aria-label="Search"
+                    id="searchInput">
+                <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
+            </form>
+            <!-- User Profile Icon -->
+            <nav class="d-flex align-items-center" id="userProfileNav"></nav>
+            <!-- Navigation Links -->
+            <nav class="space-x-10" id="navLinks">
+                <a href="login.html" class="btn btn-primary rounded-pill me-1 ms-1">Login</a>
+                <a href="register.html" class="btn btn-secondary rounded-pill me-1 ms-1">Register</a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- Sidebar -->
+            <div class="bg-secondary text-light col-md-2 p-3">
+                <!-- Search Bar in Sidebar -->
+                <form class="search-bar text-light p-3">
+                    <input class="form-control" type="search" placeholder="Search Categories"
+                        aria-label="Search Categories" id="searchInputCategories">
+                </form>
+                <!-- Location and Categories -->
+                <h2 class="">Location</h2>
+                <ul class="text-info list-unstyled" id="locationAPI">
+                </ul>
+                <h2 class="">Categories</h2>
+                <ul class="list-unstyled" id="categoryList">
+                    <!-- Unordered list will load from the backend with JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="row row-cols-1 row-cols-md-3 g-4" id="cardsContainer">
+                    <!-- Unordered list of cards will load from the backend with JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p>&copy; 2025 Craig List App</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Geolocation API to get user's location and display it in the sidebar
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const address = data.address;
+                    const city = address.city || address.town || address.village || address.county || "Unknown City";
+                    //const zip = address.postcode || "";
+
+                    //const fullLocation = zip ? `${city}, ${zip}` : city;
+                    //setUserLocation(fullLocation);
+                    setUserLocation(city);
+                })
+                .catch(error => console.error('Error:', error));
+
+            function setUserLocation(locationText) {
+                const locationList = document.getElementById('locationAPI');
+                locationList.innerHTML = `
+                    <li><i class="bi bi-geo-alt-fill mb-2 p-2" style="font-size: 25px;"></i>${locationText}</li>
+                `;
+            }
+        }, error => {
+            console.error("Geolocation Error:", error);
+            document.getElementById('locationAPI').innerHTML = `<li>Location denied</li>`;
+        });
+
+        // Get cookie for login session
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        let isLoggedIn = false;
+        let currentUserId = null;
+        if (getCookie("user_session") === "active") {
+            const idFromCookie = getCookie("user_id");
+            if (idFromCookie) {
+                currentUserId = idFromCookie;
+                isLoggedIn = true;
+                console.log("Login verified. User ID:", currentUserId);
+            } else {
+                console.log("Session active, but User ID missing.");
+                isLoggedIn = false;
+            }
+        } else {
+            console.log("No active session.");
+            isLoggedIn = false;
+        }
+
+        // Delete cookie function for logout
+        const logoutBtn = document.createElement('a');
+        logoutBtn.className = 'btn btn-outline-light rounded-pill';
+        logoutBtn.textContent = 'Logout';
+        logoutBtn.href = "#";
+        logoutBtn.onclick = function() {
+            document.cookie = "user_session=; path=/; max-age=0"; // Max-Age=0 deletes cookie instantly
+            document.cookie = "user_id=; path=/; max-age=0";
+            window.location.href = "index.html";
+        };
+
+        // Simulated User Authentication State
+        const userProfileNav = document.getElementById('userProfileNav');
+        const navLinks = document.getElementById('navLinks');
+        if (isLoggedIn) {
+            navLinks.style.display = 'none';
+            userProfileNav.style.display = 'flex';
+            userProfileNav.innerHTML = '';
+
+            const profileIconLink = document.createElement('a');
+            profileIconLink.href = 'dashboard.html';
+            profileIconLink.className = 'text-light text-decoration-none me-3';
+            const profileIcon = document.createElement('i');
+            profileIcon.className = 'bi bi-person-circle';
+            profileIcon.style.fontSize = '30px';
+            profileIconLink.appendChild(profileIcon);
+
+            const profileLink = document.createElement('a');
+            profileLink.href = 'dashboard.html';
+            profileLink.className = 'text-light text-decoration-none me-3';
+            profileLink.textContent = 'Profile';
+
+            const messagesLink = document.createElement('a');
+            messagesLink.href = 'dashboard.html';
+            messagesLink.className = 'text-light text-decoration-none me-3';
+            messagesLink.textContent = 'Messages';
+
+            const notificationsLink = document.createElement('a');
+            notificationsLink.href = 'dashboard.html';
+            notificationsLink.className = 'text-light text-decoration-none me-3';
+            notificationsLink.textContent = 'Notifications';
+
+            //const logoutBtn = document.createElement('a');
+            //logoutBtn.href = 'index.html';
+            //logoutBtn.className = 'btn btn-outline-light rounded-pill';
+            //logoutBtn.textContent = 'Logout';
+
+            userProfileNav.appendChild(profileIconLink);
+            userProfileNav.appendChild(profileLink);
+            userProfileNav.appendChild(messagesLink);
+            userProfileNav.appendChild(notificationsLink);
+            userProfileNav.appendChild(logoutBtn);
+        } else {
+            userProfileNav.style.display = 'none';
+        }
+
+        // Hard Coded Data for Categories
+        const categoryData = [
+            { name: "Electronics", link: "index.html?category=Electronics", iconClass: "bi-phone" },
+            { name: "Furniture", link: "index.html?category=Furniture", iconClass: "bi-house" },
+            { name: "Clothing", link: "index.html?category=Clothing", iconClass: "bi-bag" },
+            { name: "Books", link: "index.html?category=Books", iconClass: "bi-book" },
+            { name: "Vehicles", link: "index.html?category=Vehicles", iconClass: "bi-truck" },
+            { name: "Real Estate", link: "index.html?category=Real Estate", iconClass: "bi-building" },
+            { name: "Services", link: "index.html?category=Services", iconClass: "bi-tools" },
+            { name: "Pets", link: "index.html?category=Pets", iconClass: "bi-heart" },
+            { name: "Miscellaneous", link: "index.html?category=Miscellaneous", iconClass: "bi-three-dots" }
+        ];
+
+        // Load Categories into the Sidebar
+        const categoryList = document.getElementById('categoryList');
+        categoryData.forEach(category => {
+            const li = document.createElement('li');
+            li.className = 'text-capitalize rounded mb-2 p-2';
+
+            const a = document.createElement('a');
+            a.href = category.link;
+            a.className = 'text-light text-decoration-none d-flex align-items-center';
+
+            const icon = document.createElement('i');
+            icon.className = `${category.iconClass} me-2`;
+            icon.style.fontSize = '25px';
+
+            const span = document.createElement('span');
+            span.textContent = category.name;
+
+            a.appendChild(icon);
+            a.appendChild(span);
+            li.appendChild(a);
+            categoryList.appendChild(li);
+        });
+
+        // Get the cards container (defined once in the global scope)
+        const cardsContainer = document.getElementById('cardsContainer');
+
+        // Function to load cards into the container
+        function loadCards(cardsData) {
+            // Get category from URL
+            urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            const filteredCards = !categoryParam ? cardsData : cardsData.filter(card => card.listing && card.listing.category && card.listing.category.toLowerCase() === categoryParam.toLowerCase());
+
+            cardsContainer.innerHTML = ''; // Clear previous cards
+            if (filteredCards.length === 0) {
+                cardsContainer.innerHTML = '<p class="text-dark">No products found.</p>';
+                return;
+            }
+            filteredCards.forEach(card => {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'col';
+
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card h-100 shadow-sm';
+                cardDiv.setAttribute('data-id', card.id);
+
+                const img = document.createElement('img');
+                img.src = card.imageURLString ? card.imageURLString : 'images/img_test1_white.png';
+                img.className = 'card-img-top';
+                img.style.height = '200px';
+                img.style.objectFit = 'cover';
+                img.alt = card.title;
+
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body d-flex flex-column';
+
+                const cardTitle = document.createElement('h5');
+                cardTitle.className = 'card-title';
+                cardTitle.textContent = card.title;
+
+                const cardText = document.createElement('p');
+                cardText.className = 'card-text';
+                cardText.textContent = card.description;
+
+                const cardPrice = document.createElement('p');
+                cardPrice.className = 'card-text mt-auto';
+                const smallText = document.createElement('small');
+                smallText.className = 'text-muted';
+                smallText.textContent = (card.price <= 0) ? `Price: FREE` : `Price: $${card.price.toFixed(2)}`;
+
+                cardPrice.appendChild(smallText);
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(cardText);
+                cardBody.appendChild(cardPrice);
+                cardDiv.appendChild(img);
+                cardDiv.appendChild(cardBody);
+                colDiv.appendChild(cardDiv);
+                cardsContainer.appendChild(colDiv);
+            });
+        }
+
+        // Function to fetch cards data from the backend
+        function refreshCards() {
+            fetch('http://localhost:8080/api/products/active')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(cardsData => {
+                    loadCards(cardsData);
+                })
+                .catch(error => {
+                    console.error('Error fetching cards data: ', error);
+                    cardsContainer.innerHTML = '<p class="text-dark">Error loading products. Please try again.</p>';
+                });
+        }
+
+        // Click Event to Navigate to Detailed View
+        cardsContainer.addEventListener('click', function (event) {
+            const card = event.target.closest('.card');
+            if (card) {
+                const cardId = card.getAttribute('data-id');
+                if (cardId) {
+                    window.location.href = `listing_view.html?id=${cardId}`;
+                } else {
+                    const title = card.querySelector('.card-title').textContent;
+                    alert(`An error has occurred. Unable to navigate to detailed view for: ${title}\n\nPlease contact support.`);
+                }
+            }
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = searchInput.closest('form');
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const query = searchInput.value.trim();
+            if (query) {
+                searchProducts(query);
+            } else {
+                refreshCards();
+            }
+        });
+
+        // Function to fetch search results
+        function searchProducts(query) {
+            const searchUrl = `http://localhost:8080/api/products/search?q=${encodeURIComponent(query)}`;
+            fetch(searchUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(cardsData => {
+                    loadCards(cardsData); // Re-use your existing loadCards function
+                })
+                .catch(error => {
+                    console.error('Error fetching search results: ', error);
+                    cardsContainer.innerHTML = '<p class="text-dark">Error loading search results. Please try again.</p>';
+                });
+        }
+
+        // Initial call to load the cards when the page starts
+        refreshCards();
+    </script>
+</body>
+
+</html>

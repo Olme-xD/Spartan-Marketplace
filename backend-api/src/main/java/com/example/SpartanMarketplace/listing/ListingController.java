@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/listings")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class ListingController {
     private final ListingService listingService;
     private final UserService userService;

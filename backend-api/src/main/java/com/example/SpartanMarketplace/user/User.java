@@ -41,6 +41,10 @@ public class User {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
+    @Lob
+    @Column(name = "profile_picture_url", length = 10000000)
+    private String profilePictureUrl;
+
     @Column(nullable = false)
     private LocalDateTime dateCreated = LocalDateTime.now();
 

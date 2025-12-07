@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HEAD of HTML -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/img_test1.ico">
+    <title>Craig List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<!-- BODY of HTML -->
+
+<body class="bg-light text-dark">
+
+    <!-- Navegation Bar -->
+    <div class="sticky-top container-fluid bg-dark text-light">
+        <header class="d-flex justify-content-center align-items-center py-1">
+            <!-- Logo -->
+            <a href="index.html">
+                <img style="width: 105px; height: 100px;" src="images/img_test1_white.png" alt="Logo" class="img-fluid">
+            </a>
+        </header>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container-fluid flex-fill" id="listing-content"></div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p>&copy; 2025 Craig List App</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        // Get listing ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id'));
+
+        fetch(`http://localhost:8080/api/products/${productId}`)
+            .then(response => response.json())
+            .then(product => {
+                renderProduct(product);
+            })
+            .catch(error => {
+                // If no listing is found, redirect to the index page
+                console.error('Error fetching listings:', error);
+                alert("Listing not found. Redirecting to home page.");
+                window.location.href = "index.html";
+            });
+        function renderProduct(product) {
+            const listingContainer = document.getElementById('listing-content');
+            listingContainer.style.paddingTop = '20px';
+
+            const mainRow = document.createElement('div');
+            mainRow.className = 'row g-3 mx-auto';
+
+            // Image Gallery
+            const leftCol = document.createElement('div');
+            leftCol.className = 'col-md-8 d-flex';
+            const mainImageContainer = document.createElement('div');
+            mainImageContainer.className = 'd-flex justify-content-center align-items-center position-relative';
+            mainImageContainer.style.flexGrow = '1';
+            const mainImage = document.createElement('img');
+            mainImage.src = product.imageURLString ? product.imageURLString : 'images/img_test1_white.png';
+            mainImage.className = 'img-fluid';
+            mainImage.style.maxWidth = '100%';
+            mainImage.style.maxHeight = '600px';
+            mainImage.style.objectFit = 'contain';
+            mainImage.alt = product.title;
+
+            mainImageContainer.appendChild(mainImage);
+            leftCol.appendChild(mainImageContainer);
+
+            // Details Sidebar
+            const rightCol = document.createElement('div');
+            rightCol.className = 'col-md-4';
+            const detailsSidebar = document.createElement('div');
+            detailsSidebar.className = 'p-3 rounded shadow-sm';
+            detailsSidebar.style.backgroundColor = '#fff';
+
+            // Title
+            const titleH3 = document.createElement('h3');
+            titleH3.className = 'mb-2';
+            titleH3.textContent = product.title;
+
+            // Seller Info
+            const sellerInfoDiv = document.createElement('div');
+            sellerInfoDiv.className = 'd-flex align-items-center mb-3';
+            const sellerImg = document.createElement('img');
+            sellerImg.src = 'images/img_test.png'; // Placeholder avatar
+            sellerImg.alt = 'Seller Avatar';
+            sellerImg.className = 'rounded-circle me-2';
+            sellerImg.style.width = '30px';
+            sellerImg.style.height = '30px';
+
+            const sellerTextDiv = document.createElement('div');
+            const sellerLink = document.createElement('a');
+            sellerLink.href = `user_profile.html?id=${product.user.id}`;
+            sellerLink.className = 'text-dark text-decoration-none';
+            sellerLink.textContent = product.user ? product.user.username : 'Unknown Seller';
+            sellerTextDiv.appendChild(sellerLink);
+
+            // Star rating
+            const starRatingDiv = document.createElement('div');
+            fetch(`http://localhost:8080/api/reviews/provider/${product.user.id}/rating`)
+                .then(response => {
+                    if (response.ok) return response.json();
+                    return 0; // Default to 0 if the API fails
+                })
+                .then(rating => {
+                    const roundedRating = Math.round(rating);
+                    starRatingDiv.innerHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        const starIcon = document.createElement('i');
+                        starIcon.className = 'bi bi-star-fill me-1';
+                        starIcon.style.color = (i < roundedRating) ? '#efcc00' : '#e4e5e9';
+                        starRatingDiv.appendChild(starIcon);
+                    }
+
+                    const ratingText = document.createElement('span');
+                    ratingText.className = 'text-muted ms-2 small';
+                    ratingText.textContent = rating > 0 ? `(${rating.toFixed(1)})` : '(No ratings)';
+                    starRatingDiv.appendChild(ratingText);
+                })
+                .catch(err => console.error("Error loading rating:", err));
+                
+            sellerTextDiv.appendChild(starRatingDiv);
+            sellerInfoDiv.appendChild(sellerImg);
+            sellerInfoDiv.appendChild(sellerTextDiv);
+
+            // Price
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'my-3';
+            priceDiv.textContent = (product.price <= 0) ? 'FREE' : `$${product.price.toFixed(2)}`;
+            priceDiv.style.fontSize = '2.5rem';
+            priceDiv.style.fontWeight = '700';
+
+            // Condition
+            const conditionDiv = document.createElement('div');
+            conditionDiv.className = 'mb-3';
+            const conditionLabel = document.createElement('b');
+            conditionLabel.textContent = 'Condition: ';
+            const conditionValue = document.createTextNode(product.condition ? ` ${product.condition}` : ' N/A');
+            conditionDiv.appendChild(conditionLabel);
+            conditionDiv.appendChild(conditionValue);
+
+            // Action Buttons
+            const actionButtonsDiv = document.createElement('div');
+            actionButtonsDiv.className = 'd-grid gap-2';
+            const contactSellerButton = document.createElement('button');
+            contactSellerButton.className = 'btn btn-primary btn-lg';
+            contactSellerButton.textContent = 'Contact Seller';
+            contactSellerButton.onclick = () => {
+                window.location.href = `messages.html?thread=john`; // Placeholder for thread ID
+                //window.location.href = `contact_seller.html?id=${product.user.id}`;
+            };
+
+            actionButtonsDiv.appendChild(contactSellerButton);
+            detailsSidebar.appendChild(titleH3);
+            detailsSidebar.appendChild(sellerInfoDiv);
+            detailsSidebar.appendChild(priceDiv);
+            detailsSidebar.appendChild(conditionDiv);
+            detailsSidebar.appendChild(actionButtonsDiv);
+
+            // Product Details
+            const productDetailsCard = document.createElement('div');
+            productDetailsCard.className = 'p-3 rounded shadow-sm mt-3';
+            productDetailsCard.style.backgroundColor = '#fff';
+            const productDetailsTitle = document.createElement('h4');
+            productDetailsTitle.className = 'mb-3';
+            productDetailsTitle.textContent = 'Product Details';
+            const productDescription = document.createElement('p');
+            productDescription.textContent = product.description;
+
+            productDetailsCard.appendChild(productDetailsTitle);
+            productDetailsCard.appendChild(productDescription);
+            rightCol.appendChild(detailsSidebar);
+            rightCol.appendChild(productDetailsCard);
+            mainRow.appendChild(leftCol);
+            mainRow.appendChild(rightCol);
+
+            listingContainer.appendChild(mainRow);
+        }
+    </script>
+</body>
+
+</html>

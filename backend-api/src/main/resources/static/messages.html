@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../images/img_test1.ico" />
+    <title>Craig List — Messages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+
+        /* Chat bubbles */
+        .bubble {
+            display: inline-block;
+            padding: .5rem .75rem;
+            border-radius: 1rem;
+            max-width: 75%;
+        }
+
+        .bubble.me {
+            background: #0d6efd;
+            color: #fff;
+            border-top-right-radius: .25rem;
+        }
+
+        .bubble.them {
+            background: #f1f3f5;
+            color: #212529;
+            border-top-left-radius: .25rem;
+        }
+
+        .msg-row {
+            margin-bottom: .5rem;
+        }
+
+        .thread-header {
+            background: #f8f9fa;
+        }
+
+        .list-snippet {
+            color: #6c757d;
+            font-size: .875rem;
+        }
+
+        .thread-list .list-group-item {
+            cursor: pointer;
+        }
+
+        .thread-actions {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body class="bg-light text-light d-flex flex-column min-vh-100">
+
+    <!-- Header -->
+    <div class="sticky-top container-fluid bg-dark text-light">
+        <header class="d-flex justify-content-between align-items-center py-1">
+            <a href="../index.html">
+                <img style="width:70px;height:70px" src="../images/img_test1_white.png" alt="Logo"
+                    class="img-fluid" />
+            </a>
+            <form class="col-md-4 d-flex" role="search" onsubmit="event.preventDefault();">
+                <input id="searchInput" class="form-control rounded-pill me-2" type="search"
+                    placeholder="Search messages…" aria-label="Search" />
+                <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
+            </form>
+            <nav class="d-flex align-items-center">
+                <a href="profile.html" class="text-light text-decoration-none me-3">
+                    <i class="bi bi-person-circle" style="font-size:30px"></i>
+                </a>
+                <a href="profile.html" class="text-light text-decoration-none me-3">Profile</a>
+                <a href="dashboard.html" class="text-light text-decoration-none me-3">Dashboard</a>
+                <a href="messages.html" class="text-light text-decoration-none me-3">Messages</a>
+                <a href="notifications.html" class="text-light text-decoration-none me-3">Notifications</a>
+                <a href="rating.html" class="text-light text-decoration-none me-3">Ratings</a>
+                <a href="../index.html" class="btn btn-outline-light rounded-pill">Logout</a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- Main -->
+    <main class="container py-4 text-dark" id="appRoot">
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p class="mb-0">&copy; 2025 Craig List App</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mini data layer (localStorage) 
+        const STORAGE_KEY = 'cl_provider_threads_v1';
+
+        // Seed sample data once
+        function seedIfEmpty() {
+            if (localStorage.getItem(STORAGE_KEY)) return;
+            const now = Date.now();
+            const threads = {
+                john: {
+                    id: 'john',
+                    name: 'John Doe',
+                    subject: 'Interested in your Gaming Laptop',
+                    lastUpdated: now - 1000 * 60 * 60 * 24 * 1,
+                    unread: true,
+                    messages: [
+                        { from: 'them', text: 'Is this still available?', ts: now - 1000 * 60 * 60 * 24 * 1 }
+                    ]
+                },
+                mary: {
+                    id: 'mary',
+                    name: 'Mary Smith',
+                    subject: 'Asking about Dining Table Set',
+                    lastUpdated: now - 1000 * 60 * 60 * 24 * 3,
+                    unread: false,
+                    messages: [
+                        { from: 'them', text: 'Can you deliver?', ts: now - 1000 * 60 * 60 * 24 * 3 }
+                    ]
+                },
+                alex: {
+                    id: 'alex',
+                    name: 'Alex Johnson',
+                    subject: 'Feedback on Mountain Bike',
+                    lastUpdated: now - 1000 * 60 * 60 * 24 * 5,
+                    unread: false,
+                    messages: [
+                        { from: 'them', text: 'Thanks for the quick reply!', ts: now - 1000 * 60 * 60 * 24 * 5 }
+                    ]
+                }
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+        }
+
+        function loadThreads() {
+            seedIfEmpty();
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        }
+
+        function saveThreads(threads) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+        }
+
+        // Utilities
+        const fmtDate = (ts) => new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        const getParam = (k) => new URLSearchParams(location.search).get(k);
+        const setParam = (k, v) => {
+            const sp = new URLSearchParams(location.search);
+            v == null ? sp.delete(k) : sp.set(k, v);
+            location.search = sp.toString();
+        };
+
+        // Renderers 
+        function renderListView() {
+            const root = document.getElementById('appRoot');
+            const threads = loadThreads();
+
+            // Search filter
+            const q = (document.getElementById('searchInput').value || '').toLowerCase();
+
+            // Sort by lastUpdated desc
+            const items = Object.values(threads)
+                .filter(t => !q || (t.name + ' ' + t.subject + ' ' + (t.messages.at(-1)?.text || '')).toLowerCase().includes(q))
+                .sort((a, b) => b.lastUpdated - a.lastUpdated);
+
+            root.innerHTML = `
+        <h1 class="h4 mb-3">Messages</h1>
+        <div class="list-group shadow-sm thread-list">
+          ${items.map(t => {
+                const last = t.messages.at(-1);
+                return `
+              <a href="?thread=${encodeURIComponent(t.id)}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>${t.name}</strong> — ${t.subject.replace(/^Interested in /, 'Interested in ').replace(/^Asking about /, 'Asking about ')}
+                  <div class="list-snippet">${fmtDate(last.ts)} · “${escapeHtml(last.text)}”</div>
+                </div>
+                ${t.unread ? `<span class="badge bg-primary rounded-pill">New</span>` : ''}
+              </a>
+            `;
+            }).join('')}
+        </div>
+      `;
+        }
+
+        function renderThreadView(threadId) {
+            const root = document.getElementById('appRoot');
+            const threads = loadThreads();
+            const t = threads[threadId];
+            if (!t) { setParam('thread', null); return; }
+
+            // Mark as read
+            if (t.unread) { t.unread = false; saveThreads(threads); }
+
+            root.innerHTML = `
+        <h1 class="h4 mb-3">Messages</h1>
+        <div class="card shadow-sm">
+          <div class="card-header thread-header d-flex align-items-center justify-content-between">
+            <div><strong>Conversation with ${t.name.split(' ')[0]}</strong></div>
+            <button class="btn btn-sm btn-outline-secondary" id="backBtn">Back</button>
+          </div>
+          <div class="card-body" id="msgBody">
+            ${t.messages.map(m => `
+              <div class="d-flex ${m.from === 'me' ? 'justify-content-end' : 'justify-content-start'} msg-row">
+                <span class="bubble ${m.from === 'me' ? 'me' : 'them'}">${escapeHtml(m.text)}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="card-footer bg-white">
+            <form id="replyForm" class="d-flex gap-2">
+              <input id="replyInput" class="form-control" placeholder="Type a reply…" autocomplete="off"/>
+              <button class="btn btn-primary" type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+      `;
+
+            document.getElementById('backBtn').onclick = () => setParam('thread', null);
+
+            document.getElementById('replyForm').onsubmit = (e) => {
+                e.preventDefault();
+                const input = document.getElementById('replyInput');
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Append message, update preview & timestamps
+                const data = loadThreads();
+                const th = data[threadId];
+                th.messages.push({ from: 'me', text, ts: Date.now() });
+                th.lastUpdated = Date.now();
+                saveThreads(data);
+
+                // Render the new bubble
+                const body = document.getElementById('msgBody');
+                const row = document.createElement('div');
+                row.className = 'd-flex justify-content-end msg-row';
+                row.innerHTML = `<span class="bubble me"></span>`;
+                row.querySelector('.bubble').textContent = text;
+                body.appendChild(row);
+                input.value = '';
+                body.scrollTop = body.scrollHeight;
+            };
+
+            // Keep scroll at bottom
+            const body = document.getElementById('msgBody');
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // Helpers
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+        }
+
+        // Init / Router
+        function render() {
+            const threadId = getParam('thread');
+            if (threadId) renderThreadView(threadId);
+            else renderListView();
+        }
+
+        // search filters the list view
+        document.getElementById('searchInput').addEventListener('input', () => {
+            if (!getParam('thread')) renderListView();
+        });
+
+        // boot
+        seedIfEmpty();
+        render();
+    </script>
+</body>
+
+</html>

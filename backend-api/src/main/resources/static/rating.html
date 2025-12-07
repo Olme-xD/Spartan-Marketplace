@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HEAD of HTML -->
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../images/img_test1.ico" />
+    <title>Craig List — Ratings</title>
+
+    <!-- Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <style>
+        /* page layout */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+
+        /* stars in rows */
+        .rating-stars i {
+            color: #ffc107;
+            font-size: 1.05rem;
+        }
+
+        /* list borders a bit softer */
+        .list-group.shadow-sm .list-group-item {
+            border-color: #e9ecef;
+        }
+
+        /* action buttons (Reply/Report) */
+        .reply-btn,
+        .report-btn {
+            color: #000;
+            background: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .reply-btn:hover,
+        .report-btn:hover {
+            background: #f8f9fa;
+        }
+
+        /* Search & New Rating button */
+        .btn-primary {
+            color: #fff;
+        }
+
+        .btn-check+.btn-outline-warning {
+            background: #fff;
+            border-color: #ffc107;
+            color: #6c757d;
+        }
+
+        .btn-check:checked+.btn-outline-warning {
+            background: #fff;
+            border-color: #ffc107;
+            color: #000;
+            box-shadow: 0 0 0 .2rem rgba(255, 193, 7, .25);
+        }
+
+        .btn-outline-warning i {
+            pointer-events: none;
+        }
+
+        /* small summary card numbers */
+        .summary-stars i {
+            color: #ffc107;
+        }
+    </style>
+</head>
+
+<!-- BODY of HTML -->
+
+<body class="bg-light text-dark d-flex flex-column min-vh-100">
+    <!-- Navigation Bar -->
+    <div class="sticky-top container-fluid bg-dark text-light">
+        <header class="d-flex justify-content-between align-items-center py-1">
+            <!-- Logo -->
+            <a href="../index.html">
+                <img style="width:70px;height:70px" src="../images/img_test1_white.png" alt="Logo"
+                    class="img-fluid" />
+            </a>
+
+            <!-- Search Bar -->
+            <form class="col-md-4 d-flex" role="search" onsubmit="event.preventDefault(); render();">
+                <input id="searchBox" class="form-control rounded-pill me-2" type="search" placeholder="Search ratings…"
+                    aria-label="Search" />
+                <button id="searchBtn" class="btn btn-primary rounded-pill" type="button">Search</button>
+            </form>
+
+            <!-- Navigation Links -->
+            <nav class="d-flex align-items-center">
+                <a href="profile.html" class="text-light text-decoration-none me-3">
+                    <i class="bi bi-person-circle" style="font-size:30px"></i>
+                </a>
+                <a href="profile.html" class="text-light text-decoration-none me-3">Profile</a>
+                <a href="dashboard.html" class="text-light text-decoration-none me-3">Dashboard</a>
+                <a href="messages.html" class="text-light text-decoration-none me-3">Messages</a>
+                <a href="notifications.html" class="text-light text-decoration-none me-3">Notifications</a>
+                <a href="rating.html" class="text-light text-decoration-none me-3">Ratings</a>
+                <a href="../index.html" class="btn btn-outline-light rounded-pill">Logout</a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- Main -->
+    <main class="container py-4 text-dark">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h4 mb-0">Ratings</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRatingModal">
+                <i class="bi bi-star me-1"></i> New Rating
+            </button>
+        </div>
+
+        <!-- Tiny summary card -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div>
+                        <div class="text-muted small">Average Rating</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span id="avgScore" class="fs-4 fw-semibold">0.0</span><span class="text-muted">/ 5</span>
+                        </div>
+                        <div id="avgStars" class="summary-stars" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <div class="text-muted small"><span id="totalCount">0</span> total ratings</div>
+            </div>
+        </div>
+
+        <!-- Ratings List -->
+        <div class="list-group shadow-sm mb-4" id="ratingsList">
+            <!-- rows injected by JS -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p class="mb-0">&copy; 2025 Craig List App</p>
+    </footer>
+
+    <!-- Reply Modal -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="replyForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reply to Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <div class="small text-muted">Original review</div>
+                            <div id="replyOriginal" class="border rounded p-2 bg-light"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Your reply</label>
+                            <textarea class="form-control" id="replyText" rows="3" required></textarea>
+                        </div>
+                        <input type="hidden" id="replyId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="reportForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Report Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Reason</label>
+                            <select class="form-select" id="reportReason" required>
+                                <option value="" selected disabled>Choose reason…</option>
+                                <option>Inappropriate language</option>
+                                <option>Spam or advertising</option>
+                                <option>Harassment</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Additional details (optional)</label>
+                            <textarea class="form-control" id="reportNotes" rows="3"></textarea>
+                        </div>
+                        <input type="hidden" id="reportId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Submit report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Rating Modal -->
+    <div class="modal fade" id="newRatingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="newRatingForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create New Rating</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Listing</label>
+                            <input class="form-control" id="nrListing" placeholder="e.g., Gaming Laptop" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Person you’re rating</label>
+                            <input class="form-control" id="nrCustomer" placeholder="e.g., John Doe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label d-block">Stars</label>
+                            <div class="d-flex gap-1" id="nrStars"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Review</label>
+                            <textarea class="form-control" id="nrReview" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Seed / Storage
+        const STORAGE_KEY = 'provider_ratings_v1';
+        function getStore() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+            catch { return []; }
+        }
+        function setStore(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+        function nextId(arr) { return arr.reduce((m, r) => Math.max(m, r.id || 0), 0) + 1; }
+
+        // Helpers 
+        function starHtml(value) {
+            const v = +value || 0;
+            const full = Math.floor(v);
+            const half = (v - full) >= 0.5 ? 1 : 0;
+            const empty = 5 - full - half;
+            let html = '';
+            for (let i = 0; i < full; i++) html += '<i class="bi bi-star-fill"></i>';
+            if (half) html += '<i class="bi bi-star-half"></i>';
+            for (let i = 0; i < empty; i++) html += '<i class="bi bi-star"></i>';
+            return html;
+        }
+        function average(arr) {
+            if (!arr.length) return 0;
+            const sum = arr.reduce((s, r) => s + (+r.stars || 0), 0);
+            return Math.round((sum / arr.length) * 10) / 10;
+        }
+
+        // Build star radios
+        (function buildStarRadios() {
+            const holder = document.getElementById('nrStars');
+            for (let i = 1; i <= 5; i++) {
+                holder.insertAdjacentHTML('beforeend', `
+          <input type="radio" class="btn-check" name="nrStars" id="nrStar${i}" value="${i}" ${i === 5 ? 'checked' : ''}>
+          <label class="btn btn-outline-warning" for="nrStar${i}">
+            ${starHtml(i)}
+          </label>
+        `);
+            }
+        })();
+
+        // Render
+        function render() {
+            const listEl = document.getElementById('ratingsList');
+            const data = getStore();
+
+            // Search filter
+            const q = (document.getElementById('searchBox').value || '').toLowerCase().trim();
+            const rows = data.filter(r => !q ||
+                (r.listing || '').toLowerCase().includes(q) ||
+                (r.customer || '').toLowerCase().includes(q) ||
+                (r.review || '').toLowerCase().includes(q)
+            ).sort((a, b) => (b.id || 0) - (a.id || 0));
+
+            // Summary
+            document.getElementById('avgScore').textContent = average(data).toFixed(1);
+            document.getElementById('avgStars').innerHTML = starHtml(average(data));
+            document.getElementById('totalCount').textContent = data.length;
+
+            // Rows
+            listEl.innerHTML = rows.map(r => `
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <div class="me-3">
+              <strong>${r.customer || 'Customer'}</strong>
+              <span class="text-muted small"> on ${r.listing || 'Listing'}</span>
+              <div class="rating-stars my-1">${starHtml(+r.stars || 0)}</div>
+              <p class="mb-2">${r.review || ''}</p>
+              ${r.reply ? `<div class="small text-muted">You: ${r.reply}</div>` : ``}
+              ${r.reported ? `<span class="badge text-bg-danger me-2">Reported</span>` : ``}
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn reply-btn btn-sm" data-action="reply" data-id="${r.id}">Reply</button>
+                <button class="btn report-btn btn-sm" data-action="report" data-id="${r.id}" ${r.reported ? 'disabled' : ''}>Report</button>
+              </div>
+            </div>
+            <small class="text-muted">${r.date || ''}</small>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // Search
+        document.getElementById('searchBtn').addEventListener('click', render);
+        document.getElementById('searchBox').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); render(); } });
+
+        // Reply / Report buttons (event delegation)
+        document.getElementById('ratingsList').addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-action]');
+            if (!btn) return;
+            const id = +btn.dataset.id;
+            const data = getStore();
+            const r = data.find(x => x.id === id);
+            if (!r) return;
+
+            if (btn.dataset.action === 'reply') {
+                document.getElementById('replyOriginal').textContent = `"${r.review}" — ${r.customer}`;
+                document.getElementById('replyText').value = r.reply || '';
+                document.getElementById('replyId').value = r.id;
+                new bootstrap.Modal('#replyModal').show();
+            } else if (btn.dataset.action === 'report') {
+                if (r.reported) return;
+                document.getElementById('reportId').value = r.id;
+                document.getElementById('reportReason').value = '';
+                document.getElementById('reportNotes').value = '';
+                new bootstrap.Modal('#reportModal').show();
+            }
+        });
+
+        // Save reply
+        document.getElementById('replyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = +document.getElementById('replyId').value;
+            const txt = document.getElementById('replyText').value.trim();
+            const data = getStore();
+            const r = data.find(x => x.id === id);
+            if (r) { r.reply = txt; setStore(data); render(); }
+            bootstrap.Modal.getInstance(document.getElementById('replyModal')).hide();
+        });
+
+        // Submit report
+        document.getElementById('reportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = +document.getElementById('reportId').value;
+            const data = getStore();
+            const r = data.find(x => x.id === id);
+            if (r) {
+                r.reported = true;
+                r.reportReason = document.getElementById('reportReason').value;
+                r.reportNotes = document.getElementById('reportNotes').value.trim();
+                setStore(data); render();
+            }
+            bootstrap.Modal.getInstance(document.getElementById('reportModal')).hide();
+        });
+
+        // Create new rating
+        document.getElementById('newRatingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const listing = document.getElementById('nrListing').value.trim();
+            const customer = document.getElementById('nrCustomer').value.trim();
+            const stars = +document.querySelector('input[name="nrStars"]:checked').value;
+            const review = document.getElementById('nrReview').value.trim();
+            const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            const data = getStore();
+            data.unshift({ id: nextId(data), listing, customer, stars, review, date: today, reply: '', reported: false });
+            setStore(data);
+            render();
+
+            e.target.reset();
+            document.getElementById('nrStar5').checked = true;
+            bootstrap.Modal.getInstance(document.getElementById('newRatingModal')).hide();
+        });
+
+        // Seed if empty
+        (function seedIfEmpty() {
+            if (getStore().length) { render(); return; }
+            const seed = [
+                { id: 1, listing: 'Gaming Laptop', customer: 'John Doe', stars: 5, review: 'Excellent seller, fast shipping!', date: 'Sep 23, 2025', reply: 'Good', reported: true },
+                { id: 2, listing: 'Gaming Laptop', customer: 'John Doe', stars: 4.5, review: 'Great seller, fast shipping!', date: 'Sep 1, 2025', reply: 'Thanks', reported: false },
+                { id: 3, listing: 'Dining Table Set', customer: 'Mary Smith', stars: 3.5, review: 'Item was fine but delivery was late.', date: 'Aug 29, 2025', reply: '', reported: false }
+            ];
+            setStore(seed);
+            render();
+        })();
+    </script>
+</body>

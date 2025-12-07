@@ -36,8 +36,7 @@ public class Listing {
     @Column(nullable = false)
     private LocalDateTime dateCreated = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("listing")
     private List<Product> products = new ArrayList<>();
-    
 }

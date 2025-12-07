@@ -6,6 +6,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -18,7 +21,15 @@ public class ProductService {
      * Create a new product
      * Use Case 2.2.1.3: Create and Manage Listings
      */
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product, MultipartFile imageFile) throws IOException {
+        if (imageFile == null || imageFile.isEmpty()) {
+            throw new IllegalArgumentException("Image is required for new listings.");
+        }
+
+        String base64Image = Base64.getEncoder().encodeToString(imageFile.getBytes());
+        String dataUrl = "data:" + imageFile.getContentType() + ";base64," + base64Image;
+        product.setImageURLString(dataUrl);
+
         return productRepository.save(product);
     }
 
@@ -34,6 +45,9 @@ public class ProductService {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setActive(productDetails.isActive());
+        if (productDetails.getImageURLString() != null && !productDetails.getImageURLString().isEmpty()) {
+            product.setImageURLString(productDetails.getImageURLString());
+        }
 
         return productRepository.save(product);
     }

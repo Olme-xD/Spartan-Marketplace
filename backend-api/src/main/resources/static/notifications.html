@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../images/img_test1.ico" />
+    <title>Craig List — Notifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+
+        /* Keep the right-hand controls aligned across rows */
+        .actions-col {
+            flex: 0 0 260px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .5rem;
+            white-space: nowrap;
+        }
+
+        .actions-col .date {
+            flex: 0 0 110px;
+            text-align: right;
+            color: #6c757d;
+            font-size: .875rem;
+        }
+
+        /* Make each list item a two-part row */
+        .notification-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: .625rem;
+            padding-bottom: .625rem;
+        }
+    </style>
+</head>
+
+<body class="bg-light text-light d-flex flex-column min-vh-100">
+    <!-- Header -->
+    <div class="sticky-top container-fluid bg-dark text-light">
+        <header class="d-flex justify-content-between align-items-center py-1">
+            <a href="../index.html">
+                <img style="width:70px;height:70px" src="../images/img_test1_white.png" alt="Logo"
+                    class="img-fluid" />
+            </a>
+            <form class="col-md-4 d-flex" role="search" onsubmit="event.preventDefault()">
+                <input class="form-control rounded-pill me-2" type="search" placeholder="Search notifications…"
+                    aria-label="Search" />
+                <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
+            </form>
+            <nav class="d-flex align-items-center">
+                <a href="profile.html" class="text-light text-decoration-none me-3">
+                    <i class="bi bi-person-circle" style="font-size:30px"></i>
+                </a>
+                <a href="profile.html" class="text-light text-decoration-none me-3">Profile</a>
+                <a href="dashboard.html" class="text-light text-decoration-none me-3">Dashboard</a>
+                <a href="messages.html" class="text-light text-decoration-none me-3">Messages</a>
+                <a href="notifications.html" class="text-light text-decoration-none me-3">Notifications</a>
+                <a href="rating.html" class="text-light text-decoration-none me-3">Ratings</a>
+                <a href="../index.html" class="btn btn-outline-light rounded-pill">Logout</a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- Main -->
+    <main class="container py-4 text-dark">
+        <h1 class="h4 mb-3">Notifications</h1>
+
+        <div class="list-group shadow-sm">
+
+            <!-- Notification 1 -->
+            <div class="list-group-item notification-row">
+                <div>
+                    <i class="bi bi-bell-fill text-warning me-2"></i>
+                    Your <strong>Gaming Laptop</strong> listing reached 200 views!
+                </div>
+                <div class="actions-col">
+                    <a href="dashboard.html#listings" class="btn btn-sm btn-outline-primary">View</a>
+                    <button class="btn btn-sm btn-outline-secondary"
+                        onclick="this.closest('.list-group-item').remove()">Dismiss</button>
+                    <span class="date">Sep 2, 2025</span>
+                </div>
+            </div>
+
+            <!-- Notification 2 -->
+            <div class="list-group-item notification-row">
+                <div>
+                    <i class="bi bi-chat-dots-fill text-info me-2"></i>
+                    New message from <strong>John Doe</strong>
+                </div>
+                <div class="actions-col">
+                    <a href="messages.html" class="btn btn-sm btn-outline-primary">View</a>
+                    <button class="btn btn-sm btn-outline-secondary"
+                        onclick="this.closest('.list-group-item').remove()">Dismiss</button>
+                    <span class="date">Sep 1, 2025</span>
+                </div>
+            </div>
+
+            <!-- Notification 3 -->
+            <div class="list-group-item notification-row">
+                <div>
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    Your <strong>Dining Table Set</strong> was marked as sold.
+                </div>
+                <div class="actions-col">
+                    <a href="../listing_view.html?id=5" class="btn btn-sm btn-outline-primary">View</a>
+                    <button class="btn btn-sm btn-outline-secondary"
+                        onclick="this.closest('.list-group-item').remove()">Dismiss</button>
+                    <span class="date">Aug 29, 2025</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <p class="mb-0">&copy; 2025 Craig List App</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
