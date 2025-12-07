@@ -6,6 +6,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -81,6 +84,19 @@ public class UserController {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(401).body("Invalid Credentials");
+        }
+    }
+
+    /**
+     * Endpoint to upload profile image
+     * POST /api/users/{id}/image
+     */
+    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadProfileImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            return ResponseEntity.ok(userService.uploadProfileImage(id, file));
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Error processing image");
         }
     }
 }
