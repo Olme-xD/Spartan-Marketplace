@@ -40,4 +40,14 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> getUserTransactions(@PathVariable Long userId) {
         return ResponseEntity.ok(transactionService.getTransactionsByUser(userService.getUserById(userId)));
     }
+
+    /**
+     * Endpoint to get all transaction for a provider (pruchase history for provider
+     * to view what was sold)
+     * GET /api/transactions/provider/{providerId}
+     */
+    @GetMapping("/provider/{providerId}")
+    public ResponseEntity<List<Transaction>> getProviderTransactions(@PathVariable Long providerId) {
+        return ResponseEntity.ok(transactionService.getTransactionsForProvider(userService.getUserById(providerId)));
+    }
 }

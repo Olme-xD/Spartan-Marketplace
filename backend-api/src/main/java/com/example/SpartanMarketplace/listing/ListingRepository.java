@@ -11,5 +11,6 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     List<Listing> findByUserAndIsActive(User user, boolean isActive);
     List<Listing> findByCategory(String category);
     List<Listing> findByIsActive(boolean isActive);
+    List<Listing> findByCategoryAndIsActive(String category, boolean isActive);
     
 }
