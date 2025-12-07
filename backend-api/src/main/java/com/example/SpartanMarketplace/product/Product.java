@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 
@@ -21,10 +22,12 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "listing_id", nullable = false)
+    @JsonIgnoreProperties({"products", "user", "dateCreated"})
     private Listing listing;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"password", "listings", "products", "reviews", "email", "dateCreated", "phone_number"})
     private User user;
 
     @NotBlank
