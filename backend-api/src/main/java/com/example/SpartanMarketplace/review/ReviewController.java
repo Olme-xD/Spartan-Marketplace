@@ -79,13 +79,4 @@ public class ReviewController {
     public ResponseEntity<Double> getProviderRating(@PathVariable Long providerId) {
         return ResponseEntity.ok(reviewService.getAverageProviderRating(userService.getUserById(providerId)));
     }
-
-    /**
-     * Endpoint to get all reviews for a provider
-     * GET /api/reviews/provider/{providerId}
-     */
-    @GetMapping("/provider/{providerId}")
-    public ResponseEntity<Iterable<Review>> getReviewsForProvider(@PathVariable Long providerId) {
-        return ResponseEntity.ok(reviewService.getReviewsForProvider(userService.getUserById(providerId)));
-    }
 }
