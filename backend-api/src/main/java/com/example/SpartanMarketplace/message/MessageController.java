@@ -1,5 +1,6 @@
 package com.example.SpartanMarketplace.message;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +48,20 @@ public class MessageController {
     public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
         messageService.deleteMessage(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /*
+     * Endpoint to reply to a message
+     * PUT /api/message/{chatId}
+     */
+    @PutMapping("/{chatId}")
+    public ResponseEntity<Message> updateMessage(
+            @PathVariable Long chatId,
+            @RequestBody Message messageDetails) {
+        try {
+            return ResponseEntity.ok(messageService.updateMessage(chatId, messageDetails));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
