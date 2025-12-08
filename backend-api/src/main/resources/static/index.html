@@ -16,6 +16,13 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
+        .card-text {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+        }
     </style>
 </head>
 
@@ -175,12 +182,12 @@
             profileLink.textContent = 'Profile';
 
             const messagesLink = document.createElement('a');
-            messagesLink.href = 'dashboard.html';
+            messagesLink.href = 'messages.html';
             messagesLink.className = 'text-light text-decoration-none me-3';
             messagesLink.textContent = 'Messages';
 
             const notificationsLink = document.createElement('a');
-            notificationsLink.href = 'dashboard.html';
+            notificationsLink.href = 'notifications.html';
             notificationsLink.className = 'text-light text-decoration-none me-3';
             notificationsLink.textContent = 'Notifications';
 
