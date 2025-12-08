@@ -16,6 +16,13 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
+        .card-text {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+        }
     </style>
 </head>
 
@@ -30,7 +37,7 @@
         <header class="d-flex justify-content-between align-items-center py-1">
             <!-- Logo -->
             <a href="index.html">
-                <img style="width: 70px; height: 70px;" src="images/img_test.png" alt="Logo" class="img-fluid">
+                <img style="width: 75px; height: 70px;" src="images/img_test1_white.png" alt="Logo" class="img-fluid">
             </a>
             <!-- Search Bar -->
             <form class="col-md-4 d-flex" role="search">
@@ -60,8 +67,7 @@
                 </form>
                 <!-- Location and Categories -->
                 <h2 class="">Location</h2>
-                <ul class="text-info list-unstyled">
-                    <li><i class="bi bi-geo-alt-fill mb-2 p-2" style="font-size: 25px;"></i> City, State</li>
+                <ul class="text-info list-unstyled" id="locationAPI">
                 </ul>
                 <h2 class="">Categories</h2>
                 <ul class="list-unstyled" id="categoryList">
@@ -86,15 +92,73 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Get user status from URL (for simulation purposes)
-        let urlParams = new URLSearchParams(window.location.search);
-        let loginParam = urlParams.get('loggedIn');
+        // Geolocation API to get user's location and display it in the sidebar
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const address = data.address;
+                    const city = address.city || address.town || address.village || address.county || "Unknown City";
+                    //const zip = address.postcode || "";
+
+                    //const fullLocation = zip ? `${city}, ${zip}` : city;
+                    //setUserLocation(fullLocation);
+                    setUserLocation(city);
+                })
+                .catch(error => console.error('Error:', error));
+
+            function setUserLocation(locationText) {
+                const locationList = document.getElementById('locationAPI');
+                locationList.innerHTML = `
+                    <li><i class="bi bi-geo-alt-fill mb-2 p-2" style="font-size: 25px;"></i>${locationText}</li>
+                `;
+            }
+        }, error => {
+            console.error("Geolocation Error:", error);
+            document.getElementById('locationAPI').innerHTML = `<li>Location denied</li>`;
+        });
+
+        // Get cookie for login session
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
         let isLoggedIn = false;
-        if (loginParam === 'true') {
-            isLoggedIn = true;
+        let currentUserId = null;
+        if (getCookie("user_session") === "active") {
+            const idFromCookie = getCookie("user_id");
+            if (idFromCookie) {
+                currentUserId = idFromCookie;
+                isLoggedIn = true;
+                console.log("Login verified. User ID:", currentUserId);
+            } else {
+                console.log("Session active, but User ID missing.");
+                isLoggedIn = false;
+            }
         } else {
+            console.log("No active session.");
             isLoggedIn = false;
         }
+
+        // Delete cookie function for logout
+        const logoutBtn = document.createElement('a');
+        logoutBtn.className = 'btn btn-outline-light rounded-pill';
+        logoutBtn.textContent = 'Logout';
+        logoutBtn.href = "#";
+        logoutBtn.onclick = function() {
+            document.cookie = "user_session=; path=/; max-age=0"; // Max-Age=0 deletes cookie instantly
+            document.cookie = "user_id=; path=/; max-age=0";
+            window.location.href = "index.html";
+        };
 
         // Simulated User Authentication State
         const userProfileNav = document.getElementById('userProfileNav');
@@ -118,19 +182,19 @@
             profileLink.textContent = 'Profile';
 
             const messagesLink = document.createElement('a');
-            messagesLink.href = 'dashboard.html';
+            messagesLink.href = 'messages.html';
             messagesLink.className = 'text-light text-decoration-none me-3';
             messagesLink.textContent = 'Messages';
 
             const notificationsLink = document.createElement('a');
-            notificationsLink.href = 'dashboard.html';
+            notificationsLink.href = 'notifications.html';
             notificationsLink.className = 'text-light text-decoration-none me-3';
             notificationsLink.textContent = 'Notifications';
 
-            const logoutBtn = document.createElement('a');
-            logoutBtn.href = 'index.html';
-            logoutBtn.className = 'btn btn-outline-light rounded-pill';
-            logoutBtn.textContent = 'Logout';
+            //const logoutBtn = document.createElement('a');
+            //logoutBtn.href = 'index.html';
+            //logoutBtn.className = 'btn btn-outline-light rounded-pill';
+            //logoutBtn.textContent = 'Logout';
 
             userProfileNav.appendChild(profileIconLink);
             userProfileNav.appendChild(profileLink);
@@ -177,154 +241,81 @@
             categoryList.appendChild(li);
         });
 
-        // Search Functionality
-        const searchInput = document.getElementById('searchInputCategories');
-        searchInput.addEventListener('input', function () {
-            const filter = searchInput.value.toLowerCase();
-            const listItems = categoryList.getElementsByTagName('li');
-            Array.from(listItems).forEach(item => {
-                const text = item.textContent || item.innerText;
-                item.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
-            });
-        });
-
-        // Hard Coded Data for Cards
-        const cardsData = [{
-            id: 1,
-            category: "Electronics",
-            title: "iPhone 17 for Sale",
-            description: "Used iPhone 12 in excellent condition. Comes with charger.",
-            price: "FREE",
-            images: ["https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-black_GEO_US?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxa3pYQjBteGp2cFFHL09TNGhVUUhxeHFkSUJZcmNjVXZ4cDk3YTVMcWk4SHF2TWlpSzUzejRCZGt2SjJUNGl1VEE4bm1RcmlWRWp2eDN1WHNkSjNmUmJRdGRDSXo3RG9GTXJVdDhBcERxMEQ&traceId=1"]
-        }, {
-            id: 2,
-            category: "Furniture",
-            title: "Sofa Set - Like New",
-            description: "Comfortable 3-piece sofa set, barely used.",
-            price: "$300",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi5.walmartimages.com%2Fasr%2Ff1ffd1b0-78ab-4dc8-93db-2d83a972d86d_2.233e2d7c15408603e9f54bfa58aad1c3.jpeg&f=1&nofb=1&ipt=3d879ac51d08db2ff6b0e14179127c906f56dd3633d311096dc4f940980bad37"]
-        }, {
-            id: 3,
-            category: "Vehicles",
-            title: "Mountain Bike",
-            description: "A sturdy mountain bike suitable for all terrains. Recently serviced.",
-            price: "$450",
-            images: ["https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.singletracks.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F09%2FIMG_1720.jpg&f=1&nofb=1&ipt=bb7c589b802ce321db4adc993ee1acf8adde0566e9c853f2e433fa5ee2e64009"]
-        }, {
-            id: 4,
-            category: "Electronics",
-            title: "Gaming Laptop",
-            description: "High-performance gaming laptop with the latest specs.",
-            price: "$1200",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Frobots.net%2Fwp-content%2Fuploads%2F2023%2F12%2Fwhat-is-a-gaming-laptop-1701754858.jpg&f=1&nofb=1&ipt=bf612b3e6a479450a016a808ad548853bdfe89accbd6aa294c12e2e93f9f5af2"]
-        }, {
-            id: 5,
-            category: "Furniture",
-            title: "Dining Table Set",
-            description: "Elegant dining table set with 6 chairs.",
-            price: "$800",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fouchcart.com%2Fcdn%2Fshop%2Fproducts%2FNadine_6_-_Person_Counter_Height_Dining_Set.jpg%3Fv%3D1637225879%26width%3D800&f=1&nofb=1&ipt=fa91f4aad01a61707c0a6cde405c1b1fc76275c53e37f7718f0e5228f5070bb3"]
-        }, {
-            id: 6,
-            category: "Electronics",
-            title: "Smart TV 55\"",
-            description: "55-inch Smart TV with 4K resolution and HDR support. Like new.",
-            price: "$700",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.power-cdn.net%2Fimages%2Fh-890a46a61ea24670b1b7e9fbd7645215%2Ffeelingimages%2F1988936%2F1988936_2_1200px_w_g.jpg&f=1&nofb=1&ipt=b16fb66505b427612e4a3f1090bc4fb78b2c0d33d03494be1fe989a9f434b473"]
-        }, {
-            id: 7,
-            category: "Clothing",
-            title: "Leather Jacket",
-            description: "Genuine leather jacket, size M. Stylish and warm for winter.",
-            price: "$150",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2F1rgAAOSwWcdlvBNs%2Fs-l400.jpg&f=1&nofb=1&ipt=a19a7fac0fb988672f88ef3067c3e84fe41498ddb984b4a06a2c998d9c4e57e0"]
-        }, {
-            id: 8,
-            category: "Miscellaneous",
-            title: "Electric Guitar",
-            description: "Fender electric guitar in great condition.",
-            price: "$400",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F6c%2F94%2F58%2F6c9458a02f78830c8338fc7fffd56b9c.jpg&f=1&nofb=1&ipt=cf3b4240d765e7b612e815ea75664ad96f5088e532977eeafd7002b90b14babe"]
-        }, {
-            id: 9,
-            category: "Pets",
-            title: "Little Staircase for Pets",
-            description: "Perfect for small dogs or cats to reach higher places.",
-            price: "$430",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.sgI04Aq-dZLWvNt6JSADtAHaHa%3Fpid%3DApi&f=1&ipt=701d74794de6925ba05fb6d338fc5ef1f30485ce43c10ab78f47ee21213e5362"]
-        }, {
-            id: 10,
-            category: "Books",
-            title: "Computer Science Textbook",
-            description: "Computer Science Textbook - 3rd Edition",
-            price: "$99",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.karousell.com%2Fmedia%2Fphotos%2Fproducts%2F2016%2F05%2F28%2Fcomputer_science_textbook_1464405046_fd2ae2f1.jpg&f=1&nofb=1&ipt=41c49e19aa040615ab5349e7ada4a675e73c8d3509fd9ea6768539edc46709cd"]
-        }, {
-            id: 11,
-            category: "Real Estate",
-            title: "4 Bedroom House",
-            description: "Spacious 4 bedroom, 3 bathroom house in a great neighborhood.",
-            price: "$254,000",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-wp.photoup.net%2Fwp-content%2Fuploads%2F2022%2F09%2F08215613%2Fsky-replacement-after.jpg&f=1&nofb=1&ipt=62df1988d9baf55707eb194376d30f5568b9ffb72cb597709c669da44d908da0"]
-        }, {
-            id: 12,
-            category: "Services",
-            title: "Lawn Mowing Service",
-            description: "Professional lawn mowing and garden maintenance services.",
-            price: "$40 per session",
-            images: ["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.vYszrRtaBe4htOjt3NkbFwHaFm%3Fpid%3DApi&f=1&ipt=faaa30f18617ada564f557b6066429b14a59791ff3ecfc7d4c82094664f052ab&ipo=images"]
-        }];
-
-        // Get category from URL
-        urlParams = new URLSearchParams(window.location.search);
-        const categoryParam = urlParams.get('category');
-
-        // Load Cards into the Main Content Area
+        // Get the cards container (defined once in the global scope)
         const cardsContainer = document.getElementById('cardsContainer');
-        const filteredCards = !categoryParam ? cardsData : cardsData.filter(card => card.category.toLowerCase() === categoryParam.toLowerCase());
 
-        cardsContainer.innerHTML = ''; // Clear previous cards
-        filteredCards.forEach(card => {
-            const colDiv = document.createElement('div');
-            colDiv.className = 'col';
+        // Function to load cards into the container
+        function loadCards(cardsData) {
+            // Get category from URL
+            urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            const filteredCards = !categoryParam ? cardsData : cardsData.filter(card => card.listing && card.listing.category && card.listing.category.toLowerCase() === categoryParam.toLowerCase());
 
-            const cardDiv = document.createElement('div');
-            cardDiv.className = 'card h-100 shadow-sm';
-            cardDiv.setAttribute('data-id', card.id);
+            cardsContainer.innerHTML = ''; // Clear previous cards
+            if (filteredCards.length === 0) {
+                cardsContainer.innerHTML = '<p class="text-dark">No products found.</p>';
+                return;
+            }
+            filteredCards.forEach(card => {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'col';
 
-            const img = document.createElement('img');
-            img.src = card.images[0];
-            img.className = 'card-img-top';
-            img.style.height = '200px';
-            img.style.objectFit = 'cover';
-            img.alt = card.title;
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card h-100 shadow-sm';
+                cardDiv.setAttribute('data-id', card.id);
 
-            const cardBody = document.createElement('div');
-            cardBody.className = 'card-body d-flex flex-column';
+                const img = document.createElement('img');
+                img.src = card.imageURLString ? card.imageURLString : 'images/img_test1_white.png';
+                img.className = 'card-img-top';
+                img.style.height = '200px';
+                img.style.objectFit = 'cover';
+                img.alt = card.title;
 
-            const cardTitle = document.createElement('h5');
-            cardTitle.className = 'card-title';
-            cardTitle.textContent = card.title;
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body d-flex flex-column';
 
-            const cardText = document.createElement('p');
-            cardText.className = 'card-text';
-            cardText.textContent = card.description;
+                const cardTitle = document.createElement('h5');
+                cardTitle.className = 'card-title';
+                cardTitle.textContent = card.title;
 
-            const cardPrice = document.createElement('p');
-            cardPrice.className = 'card-text mt-auto';
-            const smallText = document.createElement('small');
-            smallText.className = 'text-muted';
-            smallText.textContent = `Price: ${card.price}`;
-            cardPrice.appendChild(smallText);
+                const cardText = document.createElement('p');
+                cardText.className = 'card-text';
+                cardText.textContent = card.description;
 
-            cardBody.appendChild(cardTitle);
-            cardBody.appendChild(cardText);
-            cardBody.appendChild(cardPrice);
-            cardDiv.appendChild(img);
-            cardDiv.appendChild(cardBody);
-            colDiv.appendChild(cardDiv);
-            cardsContainer.appendChild(colDiv);
-        });
+                const cardPrice = document.createElement('p');
+                cardPrice.className = 'card-text mt-auto';
+                const smallText = document.createElement('small');
+                smallText.className = 'text-muted';
+                smallText.textContent = (card.price <= 0) ? `Price: FREE` : `Price: $${card.price.toFixed(2)}`;
+
+                cardPrice.appendChild(smallText);
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(cardText);
+                cardBody.appendChild(cardPrice);
+                cardDiv.appendChild(img);
+                cardDiv.appendChild(cardBody);
+                colDiv.appendChild(cardDiv);
+                cardsContainer.appendChild(colDiv);
+            });
+        }
+
+        // Function to fetch cards data from the backend
+        function refreshCards() {
+            fetch('http://localhost:8080/api/products/active')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(cardsData => {
+                    loadCards(cardsData);
+                })
+                .catch(error => {
+                    console.error('Error fetching cards data: ', error);
+                    cardsContainer.innerHTML = '<p class="text-dark">Error loading products. Please try again.</p>';
+                });
+        }
 
         // Click Event to Navigate to Detailed View
         cardsContainer.addEventListener('click', function (event) {
@@ -339,6 +330,41 @@
                 }
             }
         });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = searchInput.closest('form');
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const query = searchInput.value.trim();
+            if (query) {
+                searchProducts(query);
+            } else {
+                refreshCards();
+            }
+        });
+
+        // Function to fetch search results
+        function searchProducts(query) {
+            const searchUrl = `http://localhost:8080/api/products/search?q=${encodeURIComponent(query)}`;
+            fetch(searchUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(cardsData => {
+                    loadCards(cardsData); // Re-use your existing loadCards function
+                })
+                .catch(error => {
+                    console.error('Error fetching search results: ', error);
+                    cardsContainer.innerHTML = '<p class="text-dark">Error loading search results. Please try again.</p>';
+                });
+        }
+
+        // Initial call to load the cards when the page starts
+        refreshCards();
     </script>
 </body>
 

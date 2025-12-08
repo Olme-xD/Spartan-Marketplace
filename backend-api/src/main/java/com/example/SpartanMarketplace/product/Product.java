@@ -5,7 +5,6 @@ import com.example.SpartanMarketplace.listing.Listing;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,8 +38,15 @@ public class Product {
     private String description;
 
     @NotNull
-    @Positive
     private BigDecimal price;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String condition;
+
+    @Lob
+    @Column(name = "image_url_string", length = 10000000)
+    private String imageURLString;
 
     @Column(nullable = false)
     private boolean isActive = true;
