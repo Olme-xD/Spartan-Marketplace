@@ -181,7 +181,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const CURRENT_USER_ID = 12;
+        //Helper to get cookie by name
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // Get user ID from cookie (set during login)
+        const CURRENT_USER_ID = parseInt(getCookie('user_id'));
+
+        // Redirect to login if no user ID
+        if (!CURRENT_USER_ID) {
+            alert('Please login first');
+            window.location.href = 'login.html';
+        }
+
         let currentReviewId = null;
 
         // Format date helper
@@ -358,6 +374,7 @@
             }
 
             const reviewData = {
+                user: { id: CURRENT_USER_ID },
                 product: { id: productId },
                 rating: rating,
                 buyerText: reviewText || ''

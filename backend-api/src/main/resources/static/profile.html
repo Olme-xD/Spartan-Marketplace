@@ -33,18 +33,6 @@
             width: 140px;
             color: #6c757d;
         }
-
-        /* --- Ratings tab small helpers --- */
-        .rating-star {
-            color: #ffc107;
-        }
-
-        .review-snippet {
-            max-width: 520px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     </style>
 </head>
 
@@ -69,7 +57,7 @@
                 <a href="messages.html" class="text-light text-decoration-none me-3">Messages</a>
                 <a href="notifications.html" class="text-light text-decoration-none me-3">Notifications</a>
                 <a href="rating.html" class="text-light text-decoration-none me-3">Ratings</a>
-                <a href="index.html" class="btn btn-outline-light rounded-pill">Logout</a>
+                <a href="index.html" class="btn btn-outline-light rounded-pill" onclick="logout()">Logout</a>
             </nav>
         </header>
     </div>
@@ -79,9 +67,9 @@
 
         <!-- Header -->
         <div class="d-flex flex-column align-items-center text-center mb-4">
-            <img class="avatar" src="images/img_test1_white.png" alt="Profile Avatar" />
-            <h1 class="h4 mt-3 mb-1">Jane Doe</h1>
-            <div class="text-muted">janedoe@example.com</div>
+            <img id="profileAvatar" class="avatar" src="images/img_test1_white.png" alt="Profile Avatar" />
+            <h1 id="profileName" class="h4 mt-3 mb-1">Loading...</h1>
+            <div id="profileEmail" class="text-muted">Loading...</div>
         </div>
 
         <!-- Tabs -->
@@ -98,13 +86,6 @@
                     <i class="bi bi-gear me-1"></i> Settings
                 </button>
             </li>
-            <!-- NEW: Ratings tab -->
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ratings-tab" data-bs-toggle="pill" data-bs-target="#ratings" type="button"
-                    role="tab" aria-controls="ratings" aria-selected="false">
-                    <i class="bi bi-star me-1"></i> Ratings
-                </button>
-            </li>
         </ul>
 
         <div class="tab-content">
@@ -118,20 +99,20 @@
                             <div class="card-body">
                                 <h2 class="h6 mb-3">Public Profile</h2>
                                 <div class="d-flex mb-2">
-                                    <div class="muted-label">Full Name</div>
-                                    <div>Jane Doe</div>
+                                    <div class="muted-label">Username</div>
+                                    <div id="overviewUsername">Loading...</div>
                                 </div>
                                 <div class="d-flex mb-2">
                                     <div class="muted-label">Member Since</div>
-                                    <div>Jan 2024</div>
+                                    <div id="overviewMemberSince">Loading...</div>
                                 </div>
                                 <div class="d-flex mb-2">
-                                    <div class="muted-label">Location</div>
-                                    <div>Greensboro, NC</div>
+                                    <div class="muted-label">Email</div>
+                                    <div id="overviewEmail">Loading...</div>
                                 </div>
                                 <div class="d-flex mb-2">
-                                    <div class="muted-label">Bio</div>
-                                    <div>Weekend thrifter. I sell tech and furniture in great condition.</div>
+                                    <div class="muted-label">Phone</div>
+                                    <div id="overviewPhone">N/A</div>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +127,7 @@
                                         <span class="btn btn-light disabled"><i class="bi bi-card-list"></i></span>
                                         <div>
                                             <div class="text-muted small">Active Listings</div>
-                                            <div class="fs-4 fw-semibold">3</div>
+                                            <div id="statActiveListings" class="fs-4 fw-semibold">0</div>
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +138,7 @@
                                         <span class="btn btn-light disabled"><i class="bi bi-eye"></i></span>
                                         <div>
                                             <div class="text-muted small">Profile Views</div>
-                                            <div class="fs-4 fw-semibold">156</div>
+                                            <div id="statProfileViews" class="fs-4 fw-semibold">0</div>
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +149,7 @@
                                         <span class="btn btn-light disabled"><i class="bi bi-chat-dots"></i></span>
                                         <div>
                                             <div class="text-muted small">Messages</div>
-                                            <div class="fs-4 fw-semibold">5</div>
+                                            <div id="statMessages" class="fs-4 fw-semibold">0</div>
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +160,7 @@
                                         <span class="btn btn-light disabled"><i class="bi bi-star"></i></span>
                                         <div>
                                             <div class="text-muted small">Avg. Rating</div>
-                                            <div class="fs-4 fw-semibold">4.2</div>
+                                            <div id="statAvgRating" class="fs-4 fw-semibold">N/A</div>
                                         </div>
                                     </div>
                                 </div>
@@ -195,40 +176,29 @@
                 <div class="row g-3">
                     <!-- Account info -->
                     <div class="col-lg-7">
-                        <form class="card shadow-sm" onsubmit="event.preventDefault(); alert('Saved (prototype)');">
+                        <form class="card shadow-sm" id="settingsForm" onsubmit="handleSaveSettings(event)">
                             <div class="card-body">
                                 <h2 class="h6 mb-3">Account Information</h2>
                                 <div class="row g-3">
-                                    <div class="col-sm-6">
-                                        <label class="form-label">First Name</label>
-                                        <input class="form-control" value="Jane" />
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Last Name</label>
-                                        <input class="form-control" value="Doe" />
+                                    <div class="col-12">
+                                        <label class="form-label">Username</label>
+                                        <input id="settingsUsername" class="form-control" required />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" value="janedoe@example.com" />
+                                        <input id="settingsEmail" type="email" class="form-control" required />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Phone</label>
-                                        <input type="tel" class="form-control" placeholder="(123) 456-7890" />
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Location</label>
-                                        <input class="form-control" placeholder="City, State" value="Greensboro, NC" />
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Bio</label>
-                                        <textarea class="form-control" rows="3"
-                                            placeholder="Write something about yourself…">Weekend thrifter. I sell tech and furniture in great condition.</textarea>
+                                        <input id="settingsPhone" type="tel" class="form-control"
+                                            placeholder="(123) 456-7890" />
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer bg-white d-flex gap-2">
                                 <button class="btn btn-primary" type="submit">Save Changes</button>
-                                <button class="btn btn-outline-secondary" type="reset">Cancel</button>
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="loadUserData()">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -236,15 +206,15 @@
                     <!-- Avatar / password / prefs -->
                     <div class="col-lg-5">
                         <!-- Avatar -->
-                        <form class="card shadow-sm mb-3"
-                            onsubmit="event.preventDefault(); alert('Avatar updated (prototype)');">
+                        <form class="card shadow-sm mb-3" id="avatarForm" onsubmit="handleAvatarUpdate(event)">
                             <div class="card-body">
                                 <h2 class="h6 mb-3">Profile Photo</h2>
                                 <div class="d-flex align-items-center gap-3">
-                                    <img class="avatar" src="images/img_test1_white.png" alt="Avatar Preview" />
+                                    <img id="settingsAvatar" class="avatar" src="images/img_test1_white.png"
+                                        alt="Avatar Preview" />
                                     <div class="flex-grow-1">
-                                        <input type="file" class="form-control" />
-                                        <div class="form-text">Upload is simulated for the prototype.</div>
+                                        <input id="avatarInput" type="file" class="form-control" accept="image/*" />
+                                        <div class="form-text">Upload a new profile photo</div>
                                     </div>
                                 </div>
                             </div>
@@ -254,29 +224,27 @@
                         </form>
 
                         <!-- Change password -->
-                        <form class="card shadow-sm mb-3"
-                            onsubmit="event.preventDefault(); alert('Password changed (prototype)');">
+                        <form class="card shadow-sm mb-3" id="passwordForm" onsubmit="handlePasswordChange(event)">
                             <div class="card-body">
                                 <h2 class="h6 mb-3">Change Password</h2>
                                 <div class="mb-3">
                                     <label class="form-label">Current Password</label>
-                                    <input type="password" class="form-control" />
+                                    <input id="currentPassword" type="password" class="form-control" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">New Password</label>
-                                    <input type="password" class="form-control" />
+                                    <input id="newPassword" type="password" class="form-control" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Confirm New Password</label>
-                                    <input type="password" class="form-control" />
+                                    <input id="confirmPassword" type="password" class="form-control" />
                                 </div>
                                 <button class="btn btn-outline-primary btn-sm" type="submit">Update Password</button>
                             </div>
                         </form>
 
                         <!-- Preferences -->
-                        <form class="card shadow-sm"
-                            onsubmit="event.preventDefault(); alert('Preferences saved (prototype)');">
+                        <div class="card shadow-sm">
                             <div class="card-body">
                                 <h2 class="h6 mb-3">Preferences</h2>
                                 <div class="form-check form-switch mb-2">
@@ -296,9 +264,10 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                <button class="btn btn-outline-primary btn-sm" type="submit">Save Preferences</button>
+                                <button class="btn btn-outline-primary btn-sm"
+                                    onclick="alert('Preferences saved!')">Save Preferences</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     <!-- Danger zone -->
@@ -307,84 +276,9 @@
                             <div class="card-body">
                                 <h2 class="h6 text-danger mb-2">Danger Zone</h2>
                                 <p class="mb-3 text-muted">Delete your account and all associated data. This action
-                                    cannot be undone (prototype only).</p>
-                                <button class="btn btn-outline-danger btn-sm"
-                                    onclick="alert('Account deletion simulated.')">Delete Account</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- NEW: RATINGS TAB (Total ratings for this user) -->
-            <section class="tab-pane fade" id="ratings" role="tabpanel" aria-labelledby="ratings-tab">
-                <div class="row g-3">
-                    <!-- Summary -->
-                    <div class="col-lg-4">
-                        <div class="card shadow-sm">
-                            <div class="card-body">
-                                <h2 class="h6 mb-2">Average Rating</h2>
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <span class="fs-3 fw-semibold" id="r-avg">0.0</span>
-                                    <span class="text-muted">/ 5</span>
-                                </div>
-                                <div id="r-avg-stars" class="mb-2" aria-hidden="true"></div>
-                                <div class="small text-muted"><span id="r-total">0</span> total ratings</div>
-                            </div>
-                        </div>
-
-                        <div class="card shadow-sm mt-3">
-                            <div class="card-body">
-                                <h2 class="h6 mb-2">Distribution</h2>
-                                <!-- 5 to 1 star bars -->
-                                <div class="mb-2 d-flex align-items-center gap-2">
-                                    <span class="small">5</span>
-                                    <div class="progress flex-grow-1" style="height:8px;">
-                                        <div class="progress-bar bg-warning" id="bar-5" style="width:0%"></div>
-                                    </div>
-                                    <span class="small text-muted" id="count-5">0</span>
-                                </div>
-                                <div class="mb-2 d-flex align-items-center gap-2">
-                                    <span class="small">4</span>
-                                    <div class="progress flex-grow-1" style="height:8px;">
-                                        <div class="progress-bar bg-warning" id="bar-4" style="width:0%"></div>
-                                    </div>
-                                    <span class="small text-muted" id="count-4">0</span>
-                                </div>
-                                <div class="mb-2 d-flex align-items-center gap-2">
-                                    <span class="small">3</span>
-                                    <div class="progress flex-grow-1" style="height:8px;">
-                                        <div class="progress-bar bg-warning" id="bar-3" style="width:0%"></div>
-                                    </div>
-                                    <span class="small text-muted" id="count-3">0</span>
-                                </div>
-                                <div class="mb-2 d-flex align-items-center gap-2">
-                                    <span class="small">2</span>
-                                    <div class="progress flex-grow-1" style="height:8px;">
-                                        <div class="progress-bar bg-warning" id="bar-2" style="width:0%"></div>
-                                    </div>
-                                    <span class="small text-muted" id="count-2">0</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="small">1</span>
-                                    <div class="progress flex-grow-1" style="height:8px;">
-                                        <div class="progress-bar bg-warning" id="bar-1" style="width:0%"></div>
-                                    </div>
-                                    <span class="small text-muted" id="count-1">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent reviews -->
-                    <div class="col-lg-8">
-                        <div class="card shadow-sm">
-                            <div class="card-body">
-                                <h2 class="h6 mb-3">Recent Reviews</h2>
-
-                                <div class="list-group list-group-flush" id="r-list">
-                                    <!-- injected rows -->
-                                </div>
+                                    cannot be undone.</p>
+                                <button class="btn btn-outline-danger btn-sm" onclick="handleDeleteAccount()">Delete
+                                    Account</button>
                             </div>
                         </div>
                     </div>
@@ -400,73 +294,277 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // --- Mock ratings for the profile's Ratings tab (replace with real data later) ---
-        const ratingsData = [
-            { id: 1, customer: 'John Doe', listing: 'Gaming Laptop', stars: 5, review: 'Excellent seller, fast shipping!', date: 'Sep 23, 2025' },
-            { id: 2, customer: 'John Doe', listing: 'Gaming Laptop', stars: 4, review: 'Great seller, fast shipping!', date: 'Sep 1, 2025' },
-            { id: 3, customer: 'Mary Smith', listing: 'Dining Table Set', stars: 3.5, review: 'Item was fine but delivery was late.', date: 'Aug 29, 2025' }
-        ];
-
-        function starHtml(value) {
-            const full = Math.floor(value);
-            const half = (value - full) >= 0.5 ? 1 : 0;
-            const empty = 5 - full - half;
-            let html = '';
-            for (let i = 0; i < full; i++) html += '<i class="bi bi-star-fill rating-star"></i>';
-            if (half) html += '<i class="bi bi-star-half rating-star"></i>';
-            for (let i = 0; i < empty; i++) html += '<i class="bi bi-star rating-star"></i>';
-            return html;
+        // Helper to get cookie by name
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
         }
 
-        function renderRatingsTab() {
-            if (!document.getElementById('ratings')) return;
+        // Get user ID from cookie
+        const userId = getCookie('user_id');
+        const API_BASE = 'http://localhost:8080/api';
 
-            const total = ratingsData.length || 0;
-            const avg = total ? Math.round((ratingsData.reduce((a, r) => a + r.stars, 0) / total) * 10) / 10 : 0;
-
-            // Summary
-            document.getElementById('r-avg').textContent = avg.toFixed(1);
-            document.getElementById('r-avg-stars').innerHTML = starHtml(avg);
-            document.getElementById('r-total').textContent = total;
-
-            // Distribution
-            const buckets = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-            ratingsData.forEach(r => {
-                const key = Math.round(r.stars);
-                buckets[key] = (buckets[key] || 0) + 1;
-            });
-            [5, 4, 3, 2, 1].forEach(n => {
-                const pct = total ? (buckets[n] / total) * 100 : 0;
-                document.getElementById('bar-' + n).style.width = pct + '%';
-                document.getElementById('count-' + n).textContent = buckets[n] || 0;
-            });
-
-            // Recent list
-            const list = document.getElementById('r-list');
-            list.innerHTML = ratingsData.map(r => `
-                <div class="list-group-item px-0">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <strong>${r.customer}</strong>
-                            <span class="text-muted small"> on ${r.listing}</span>
-                            <div class="mt-1">${starHtml(r.stars)}</div>
-                            <div class="review-snippet mt-1 text-muted">${r.review}</div>
-                        </div>
-                        <small class="text-muted">${r.date}</small>
-                    </div>
-                </div>
-            `).join('');
+        // Redirect to login if not logged in
+        if (!userId) {
+            alert('Please login first');
+            window.location.href = 'login.html';
         }
 
-        // Render once DOM is ready
-        document.addEventListener('DOMContentLoaded', renderRatingsTab);
-        // Also render when the Ratings tab is first shown (if user switches to it later)
-        const ratingsTab = document.getElementById('ratings-tab');
-        if (ratingsTab) {
-            ratingsTab.addEventListener('shown.bs.tab', renderRatingsTab);
+        let currentUserData = null;
+
+        // Format date helper
+        function formatMemberSince(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
         }
+
+        // Load user data from backend
+        async function loadUserData() {
+            try {
+                // Fetch user data
+                const userResponse = await fetch(`${API_BASE}/users/${userId}`);
+                if (!userResponse.ok) throw new Error('Failed to fetch user data');
+                const userData = await userResponse.json();
+                currentUserData = userData;
+
+                // Update header
+                document.getElementById('profileName').textContent = userData.username || 'User';
+                document.getElementById('profileEmail').textContent = userData.email || '';
+
+                // Update avatars
+                const avatarUrl = userData.profilePictureUrl || 'images/img_test1_white.png';
+                document.getElementById('profileAvatar').src = avatarUrl;
+                document.getElementById('settingsAvatar').src = avatarUrl;
+
+                // Update overview tab
+                document.getElementById('overviewUsername').textContent = userData.username || 'N/A';
+                document.getElementById('overviewMemberSince').textContent = formatMemberSince(userData.dateCreated);
+                document.getElementById('overviewEmail').textContent = userData.email || 'N/A';
+                document.getElementById('overviewPhone').textContent = userData.phoneNumber || 'N/A';
+
+                // Update settings form
+                document.getElementById('settingsUsername').value = userData.username || '';
+                document.getElementById('settingsEmail').value = userData.email || '';
+                document.getElementById('settingsPhone').value = userData.phoneNumber || '';
+
+                // Load statistics
+                await loadStatistics();
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                alert('Failed to load profile data');
+            }
+        }
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                // Active listings count (count active products, not listing containers)
+                const productsResponse = await fetch(`${API_BASE}/products/user/${userId}`);
+                if (productsResponse.ok) {
+                    const products = await productsResponse.json();
+                    console.log('Products fetched:', products);
+                    console.log('Number of products:', products.length);
+
+                    // Check the actual property name
+                    if (products.length > 0) {
+                        console.log('First product:', products[0]);
+                        console.log('isActive property:', products[0].isActive);
+                        console.log('active property:', products[0].active);
+                    }
+
+                    const activeProducts = products.filter(p => p.isActive === true || p.active === true).length;
+                    console.log('Active products count:', activeProducts);
+                    document.getElementById('statActiveListings').textContent = activeProducts;
+                } else {
+                    console.error('Failed to fetch products:', productsResponse.status);
+                }
+
+                // Messages count
+                const messagesResponse = await fetch(`${API_BASE}/messages/user/${userId}`);
+                if (messagesResponse.ok) {
+                    const messages = await messagesResponse.json();
+                    console.log('Messages fetched:', messages.length);
+                    document.getElementById('statMessages').textContent = messages.length;
+                } else {
+                    console.error('Failed to fetch messages:', messagesResponse.status);
+                }
+
+                // Average rating
+                const ratingResponse = await fetch(`${API_BASE}/reviews/provider/${userId}/rating`);
+                if (ratingResponse.ok) {
+                    const rating = await ratingResponse.json();
+                    console.log('Average rating:', rating);
+                    document.getElementById('statAvgRating').textContent = rating > 0 ? rating.toFixed(1) : 'N/A';
+                } else {
+                    console.error('Failed to fetch rating:', ratingResponse.status);
+                }
+
+                // Profile views (from user data)
+                document.getElementById('statProfileViews').textContent = currentUserData.profileViews || '0';
+
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        // Handle settings form submission
+        async function handleSaveSettings(event) {
+            event.preventDefault();
+
+            const updatedUser = {
+                username: document.getElementById('settingsUsername').value,
+                email: document.getElementById('settingsEmail').value,
+                phoneNumber: document.getElementById('settingsPhone').value,
+                password: currentUserData.password // Keep existing password
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/users/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedUser)
+                });
+
+                if (!response.ok) throw new Error('Failed to update profile');
+
+                alert('Profile updated successfully!');
+                await loadUserData();
+
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile. Please try again.');
+            }
+        }
+
+        // Handle avatar update
+        async function handleAvatarUpdate(event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('avatarInput');
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE}/users/${userId}/image`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Failed to upload image');
+
+                alert('Profile photo updated successfully!');
+                await loadUserData();
+                fileInput.value = '';
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Failed to upload image. Please try again.');
+            }
+        }
+
+        // Handle password change
+        async function handlePasswordChange(event) {
+            event.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Please fill in all password fields');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+
+            // Verify current password
+            if (currentPassword !== currentUserData.password) {
+                alert('Current password is incorrect');
+                return;
+            }
+
+            const updatedUser = {
+                ...currentUserData,
+                password: newPassword
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/users/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedUser)
+                });
+
+                if (!response.ok) throw new Error('Failed to update password');
+
+                alert('Password updated successfully!');
+                document.getElementById('passwordForm').reset();
+                await loadUserData();
+
+            } catch (error) {
+                console.error('Error updating password:', error);
+                alert('Failed to update password. Please try again.');
+            }
+        }
+
+        // Handle account deletion
+        async function handleDeleteAccount() {
+            if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                return;
+            }
+
+            if (!confirm('This will permanently delete all your listings, messages, and reviews. Are you absolutely sure?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/users/${userId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete account');
+
+                alert('Account deleted successfully');
+                logout();
+
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert('Failed to delete account. Please try again.');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            document.cookie = 'user_session=; path=/; max-age=0';
+            document.cookie = 'user_id=; path=/; max-age=0';
+            window.location.href = 'index.html';
+        }
+
+        // Preview avatar when file is selected
+        document.getElementById('avatarInput').addEventListener('change', function (e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById('settingsAvatar').src = event.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Initialize page
+        loadUserData();
     </script>
 </body>
 
