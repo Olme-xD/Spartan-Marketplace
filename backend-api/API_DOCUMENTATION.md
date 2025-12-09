@@ -6,10 +6,10 @@
 POST /api/users
 Content-Type: application/json
 {
-    "username": "example",
-    "email": "example@example.com",
-    "password": "123456789",
-    "phone_number": "000-000-0000"
+  "username": "example",
+  "email": "example@example.com",
+  "password": "123456789",
+  "phone_number": "000-000-0000"
 }
 ```
 ### Update Customer
@@ -17,10 +17,10 @@ Content-Type: application/json
 PUT /api/users/{id}
 Content-Type: application/json
 {
-    "username": "example",
-    "email": "example@example.com",
-    "password": "123456789",
-    "phone_number": "000-000-0000"
+  "username": "example",
+  "email": "example@example.com",
+  "password": "123456789",
+  "phone_number": "000-000-0000"
 }
 ```
 ### Get All Customer
@@ -34,6 +34,23 @@ GET /api/users/{id}
 ### Delete Customer
 ```http
 DELETE /api/users/{id}
+```
+### User Login
+```http
+POST /api/users/login
+Content-Type: application/json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+### Update Profile Picture
+```http
+POST /api/users/{id}/image
+Content-Type: multipart/form-data
+
+Form-Data:
+- file: (binary image file)
 ```
 
 ## Listings API Endpoints
@@ -149,14 +166,6 @@ GET /api/transactions/user/{userId}
 ```http
 GET /api/transactions/provider/{providerId}
 ```
-### Get Transaction by Product ID
-```http
-GET /api/transactions/product/{productId}
-```
-### Delete Transaction by ID
-```http
-DELETE /api/transactions/{id}
-```
 
 ## Review API Endpoints
 ### Create a Review
@@ -220,21 +229,30 @@ Content-Type: application/json
   "buyerText": "example"
 }
 ```
+### Create a thread
+```http
+POST /api/messages/thread
+Content-Type: application/json
+{
+  "product": {"id": 1},
+  "buyerId": 1,
+  "sellerId": 2,
+  "buyerText": "Starting conversation..."
+}
+```
+### Reply to a message
+```http
+PUT /api/messages/{chatId}
+Content-Type: application/json
+{
+  "buyerText": "This is a test from buyer"
+  // OR
+  "sellerText": "This is a test from seller"
+}
+```
 ### Get Messages by ID
 ```http
 GET /api/messages/{id}
-```
-### Get Messages by Product ID
-```http
-GET /api/messages/product/{productId}
-```
-### Get Messages by Buyer ID
-```http
-GET /api/messages/buyer/{buyerId}
-```
-### Get Messages by Seller ID
-```http
-GET /api/messages/seller/{sellerId}
 ```
 ### Get Messages by User ID
 ```http
