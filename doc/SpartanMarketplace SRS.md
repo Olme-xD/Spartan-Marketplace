@@ -42,6 +42,13 @@ Table of Contents
 |Omar Morales|  9/17  | Added section #2 statements                           |  1.2      |
 |Omar Morales|  9/17  | Added non-functional reqs and provider functional reqs|  1.3      |
 |Olme Matias | 10/10  | Changed name from CraigList to Spartan Marketplace    |  1.4      |
+|Omar Morales|  10/21  | Added static html pages for Transaction, Rating, Messages|  1.5      |
+|Olme Matias | 10/21   | Added static html pages for User, Listing, Product    |  1.6      |
+|Omar Morales|  10/28  | Added API for Transaction, Rating, Messages           |  1.7      |
+|Olme Matias | 10/28   | Added API for User, Listing, Product                  |  1.8      |
+|Olme Matias | 10/28   | Added Third Party API                  |  1.9      |
+|Omar Morales|  12/9  | Added Final implementation completed - all use cases deployed|  2.0      |
+|Olme Matias | 12/6   | Added Final implementation completed - all use cases deployed|  2.1      |
 
 ## 1. Introduction
 
