@@ -22,25 +22,28 @@ public class ReviewService {
      */
     public Review createReview(Review review) {
         // Validate rating
-        if (review.getRating() == null || review.getRating() < 1 || review.getRating() > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5");
-        }
+    if (review.getRating() == null || review.getRating() < 1 || review.getRating() > 5) {
+        throw new IllegalArgumentException("Rating must be between 1 and 5");
+    }
 
-        // Validate product exists and fetch full entity
-        if (review.getProduct() == null || review.getProduct().getId() == null) {
-            throw new IllegalArgumentException("Product ID is required for review");
-        }
+    // Validate product exists and fetch full entity
+    if (review.getProduct() == null || review.getProduct().getId() == null) {
+        throw new IllegalArgumentException("Product ID is required for review");
+    }
 
-        Product product = productRepository.findById(review.getProduct().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+    Product product = productRepository.findById(review.getProduct().getId())
+            .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-        // Set the full product entity
-        review.setProduct(product);
+    // Set the full product entity
+    review.setProduct(product);
 
-        // The person being reviewed is the product owner
-        review.setUser(product.getUser());
+    // review.setUser(product.getUser());
+    
+    if (review.getUser() == null || review.getUser().getId() == null) {
+        throw new IllegalArgumentException("User ID is required for review");
+    }
 
-        return reviewRepository.save(review);
+    return reviewRepository.save(review);
     }
 
     /**

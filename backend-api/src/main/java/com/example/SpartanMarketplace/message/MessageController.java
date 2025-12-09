@@ -64,4 +64,27 @@ public class MessageController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    /**
+     * Endpoint to create or get existing message thread for a product
+     * POST /api/messages/thread
+     */
+    @PostMapping("/thread")
+    public ResponseEntity<Message> createOrGetThread(@RequestBody Message message) {
+        // Check if a thread already exists between these users for this product
+        List<Message> existingMessages = messageService.getMessagesForUser(message.getBuyerId());
+
+        for (Message msg : existingMessages) {
+            if (msg.getProduct().getId().equals(message.getProduct().getId()) &&
+                    msg.getBuyerId().equals(message.getBuyerId()) &&
+                    msg.getSellerId().equals(message.getSellerId())) {
+                // Thread already exists, return it
+                return ResponseEntity.ok(msg);
+            }
+        }
+
+        // Create new thread
+        return ResponseEntity.ok(messageService.sendMessage(message));
+    }
+
 }
