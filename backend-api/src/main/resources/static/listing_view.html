@@ -107,7 +107,7 @@
             const sellerInfoDiv = document.createElement('div');
             sellerInfoDiv.className = 'd-flex align-items-center mb-3';
             const sellerImg = document.createElement('img');
-            sellerImg.src = 'images/img_test.png'; // Placeholder avatar
+            sellerImg.src = product.user.profilePictureUrl || 'images/img_test1_white.png';
             sellerImg.alt = 'Seller Avatar';
             sellerImg.className = 'rounded-circle me-2';
             sellerImg.style.width = '30px';
