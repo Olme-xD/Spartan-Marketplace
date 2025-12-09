@@ -77,7 +77,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         boolean isValid = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
-        
+
         if (isValid) {
             // Set user_session cookie
             Cookie cookie = new Cookie("user_session", "active");
@@ -85,7 +85,7 @@ public class UserController {
             cookie.setMaxAge(7 * 24 * 60 * 60); // 1 week
             cookie.setHttpOnly(false);
             response.addCookie(cookie);
-            
+
             // Also set user_id cookie
             User user = userService.getUserByEmail(loginRequest.getEmail());
             Cookie idCookie = new Cookie("user_id", String.valueOf(user.getId()));

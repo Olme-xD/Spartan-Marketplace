@@ -31,7 +31,8 @@ public class UserService {
 
     /**
      * Checks for user login (Login)
-     * Use Case *NOT YET DEFINED*: Login
+     * Use Case: Login
+     * 
      * @return true if valid, false otherwise.
      */
     public boolean validateUser(String email, String password) {
@@ -49,7 +50,7 @@ public class UserService {
      */
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
@@ -63,7 +64,7 @@ public class UserService {
      */
     public User getUserById(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     /**
@@ -71,7 +72,7 @@ public class UserService {
      */
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     /**
@@ -93,17 +94,16 @@ public class UserService {
 
     /**
      * Upload or Update Profile Image
-     * Use Case
-    */
+     */
     public User uploadProfileImage(Long id, MultipartFile file) throws IOException {
         User user = getUserById(id);
-        
+
         if (file != null && !file.isEmpty()) {
             String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
             String dataUrl = "data:" + file.getContentType() + ";base64," + base64Image;
             user.setProfilePictureUrl(dataUrl);
         }
-        
+
         return userRepository.save(user);
     }
 }
